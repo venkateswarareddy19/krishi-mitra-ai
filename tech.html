@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>New Technologies — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="tech">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar">
+    <span class="material-icons">precision_manufacturing</span><h2>New Technologies &amp; Gadgets</h2>
+    <div class="kb-pgbar-right"><span class="badge bdg-blue">Smart Farming</span></div>
+  </div>
+
+  <div class="info-box ib-green"><span class="material-icons">tips_and_updates</span><p>Modern farming technologies that increase yield, reduce costs and help you do more with less. Multiple government subsidies available on listed items.</p></div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <span class="material-icons">search</span>
+    <input type="text" id="techSearch" placeholder="Search technologies, gadgets, subsidies..." oninput="filterTech()"/>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-row" id="techFilterRow">
+    <div class="f-chip active" onclick="setTechCat('all',this)"><span class="material-icons">apps</span>All</div>
+    <div class="f-chip" onclick="setTechCat('irrigation',this)"><span class="material-icons">water_drop</span>Irrigation</div>
+    <div class="f-chip" onclick="setTechCat('drone',this)"><span class="material-icons">flight</span>Drones</div>
+    <div class="f-chip" onclick="setTechCat('monitoring',this)"><span class="material-icons">sensors</span>Monitoring</div>
+    <div class="f-chip" onclick="setTechCat('machinery',this)"><span class="material-icons">agriculture</span>Machinery</div>
+    <div class="f-chip" onclick="setTechCat('solar',this)"><span class="material-icons">solar_power</span>Solar</div>
+    <div class="f-chip" onclick="setTechCat('organic',this)"><span class="material-icons">eco</span>Organic Tech</div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="techCount"></div>
+  <div class="kb-grid" id="techGrid"></div>
+</div>
+</main>
+
+<!-- Tech Detail Modal -->
+<div class="modal-overlay" id="techModal" onclick="closeModalOnOverlay(event,'techModal')">
+  <div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title" id="tmTitle">Technology Details</div><button class="modal-close" onclick="closeModal('techModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body" id="tmBody"></div>
+  </div>
+</div>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const TECH_DATA = [
+  {id:1, cat:'irrigation', img:0,
+   name:'Drip Irrigation System', price:'Rs.18,000/acre', subsidy:'55% PM Sinchai Subsidy',
+   short:'Precision water delivery to root zone. Reduces water use by 60% and increases yield 20-30%.',
+   desc:'Complete drip irrigation kit includes mainline, sub-main, laterals, pressure-compensating drippers, filter, pressure regulator and fittings. Suitable for vegetables, fruits, cotton and sugarcane. Lifetime of 8-10 years with proper maintenance.',
+   specs:['Water saving: 60% vs flood irrigation','Yield increase: 20-30% on average','Fertigation ready — apply fertiliser through water','Installation: 2-3 days per acre','Warranty: 5 years on components'],
+   subsidy_detail:'55% subsidy under PM Krishi Sinchai Yojana. SC/ST farmers get 65% subsidy. Apply via local agriculture department with land documents and Aadhaar.'},
+  {id:2, cat:'drone', img:1,
+   name:'Agricultural Spraying Drone', price:'Rs.4,500/acre (rental)', subsidy:'CHC Scheme Available',
+   short:'AI-guided drone covers 10 acres/hour. Precision spraying reduces chemical use by 30% and labour by 90%.',
+   desc:'Multi-rotor agricultural drone with 10L tank capacity, GPS auto-navigation, obstacle avoidance, and variable nozzle spray system. Generates field maps after every spray operation. Battery: 25 minutes flight time. Available for rent through Custom Hiring Centres.',
+   specs:['Coverage: 10 acres/hour','Tank capacity: 10 litres','GPS auto-navigation with pre-set flight path','Chemical savings: 30% vs manual spraying','Generates spray completion certificate'],
+   subsidy_detail:'Available at 50% subsidy under CHC (Custom Hiring Centre) scheme. Farmer groups and FPOs can apply for purchase subsidy. Individual rental rate: Rs.4,500-5,500 per acre.'},
+  {id:3, cat:'solar', img:2,
+   name:'PM-KUSUM Solar Water Pump', price:'Rs.15,000 (pay 10%)', subsidy:'90% PM-KUSUM Subsidy',
+   short:'Solar-powered irrigation pump with zero electricity cost forever. Government pays 60%, bank loan for 30%.',
+   desc:'Available in 2 HP, 3 HP, 5 HP and 7.5 HP capacities. Submersible or surface type available. Includes solar panels, pump, controller, protection systems and 5-year maintenance. Discharge 50,000-2,00,000 litres per day depending on HP.',
+   specs:['Capacities: 2HP to 7.5HP','Discharge: 50,000-2,00,000 litres/day','Solar panels: 5 year warranty, 25 year life','Zero electricity bill for life','Sell surplus power to grid for extra income'],
+   subsidy_detail:'PM-KUSUM Scheme: Central govt pays 30%, State govt pays 30%, bank loan for 30%, farmer pays 10% only. Apply via state agriculture department. Preference to farmers without power connection.'},
+  {id:4, cat:'monitoring', img:3,
+   name:'IoT Smart Soil Sensor Kit', price:'Rs.8,500/kit', subsidy:'',
+   short:'Real-time soil NPK, moisture and temperature monitoring with automatic phone alerts when irrigation or fertiliser needed.',
+   desc:'Wireless IoT sensor kit with 3 in-field sensors, solar-powered data logger, 4G connectivity and mobile app. Monitors: soil moisture at 3 depths, temperature, electrical conductivity, NPK levels. Sends alert when any parameter goes out of range.',
+   specs:['Sensors: Soil moisture, temperature, EC, NPK','Alert: SMS + app notification on threshold breach','Battery: Solar powered — no charging needed','Data: Cloud storage with 2-year history','Range: 500 metres from data logger'],
+   subsidy_detail:'No direct subsidy currently. However, equipment is eligible for depreciation benefit if registered as farm asset. FPOs purchasing 10+ units get 15% group discount.'},
+  {id:5, cat:'machinery', img:4,
+   name:'Mini Tractor (18-20 HP)', price:'Rs.3,50,000', subsidy:'CHC Subsidy Available',
+   short:'Compact 4WD tractor for small farms. Handles ploughing, sowing, spraying and transport. Multiple attachments available.',
+   desc:'18 HP diesel engine, 4WD for all terrain, power steering, adjustable wheel track (for inter-row cultivation). Compatible with: rotavator, cultivator, ridger, sprayer, trailer. Fuel efficiency: 1.5-2 litres/hour. Service centres across all districts.',
+   specs:['Engine: 18-20 HP diesel, 4WD','Fuel efficiency: 1.5-2 litres/hour','Attachments: 12+ implements available','Track width: Adjustable 900-1500 mm','After-sales: 500+ service centres nationally'],
+   subsidy_detail:'45-50% subsidy for small and marginal farmers under SMAM scheme. SC/ST farmers get 55% subsidy. Apply through state agriculture department with land documents and caste certificate.'},
+  {id:6, cat:'monitoring', img:5,
+   name:'Farm Weather Station (Micro)', price:'Rs.12,000', subsidy:'',
+   short:'Personal weather station for your farm. Predicts disease outbreaks, optimal spray windows and irrigation needs.',
+   desc:'Compact weather station with sensors for temperature, humidity, wind speed/direction, rainfall and barometric pressure. Solar powered, waterproof (IP67). Mobile app shows 7-day hyperlocal forecast and sends farming advisories.',
+   specs:['Sensors: Temp, humidity, wind, rainfall, pressure','Solar powered — install once, runs forever','App: iOS + Android with push notifications','Disease alert: Calculates infection risk daily','Range: Covers 1-5 acre radius effectively'],
+   subsidy_detail:'No direct subsidy. Eligible for loan under Kisan Credit Card as farm equipment. Some state governments offer partial subsidy under precision farming schemes — check with local department.'},
+  {id:7, cat:'irrigation', img:0,
+   name:'Sprinkler Irrigation Kit', price:'Rs.9,000/acre', subsidy:'50% PM Sinchai Subsidy',
+   short:'Uniform large-area irrigation for wheat, groundnut and maize. More economical than drip for field crops.',
+   desc:'Complete sprinkler kit with aluminium or HDPE pipes, rotating sprinkler heads, coupler sets, and foot valve. Suitable for 1-10 acre farms. Coverage radius per sprinkler: 6 metres. Operates at 2-3 kg/cm2 pressure. Ideal for sandy soils.',
+   specs:['Coverage: 6 metre radius per sprinkler','Water pressure: 2-3 kg/cm2','Material: Aluminium (durable) or HDPE (lightweight)','Application rate: 8-10 mm/hour','Saves 40-50% water vs flood irrigation'],
+   subsidy_detail:'50% subsidy under PM Sinchai Yojana for all farmer categories. SC/ST farmers get 60%. Apply via local agriculture department. Equipment must be purchased from registered vendors.'},
+  {id:8, cat:'organic', img:1,
+   name:'Vermicompost Production Unit', price:'Rs.3,500/unit', subsidy:'MNREGA Support Available',
+   short:'Convert farm waste into premium organic manure in 30 days. Produces 50 kg compost per month from one unit.',
+   desc:'Pre-fabricated concrete vermicompost bed (2m x 1m x 0.45m) with shade net covering. Comes with starter worm culture (1 kg Eisenia fetida), instruction manual and 6-month technical support. One unit produces 50 kg/month of premium vermicompost worth Rs.1,000-1,500.',
+   specs:['Size: 2m x 1m x 0.45m','Output: 50 kg vermicompost per month','Input: 30-40 kg farm/kitchen waste per month','Worms included: 1 kg starter culture','ROI: Positive within 2 months'],
+   subsidy_detail:'MNREGA provides labour support for construction of vermicompost units. Some state govts offer Rs.1,500-2,000 subsidy per unit. Zero-cost setup possible using bricks and waste materials.'},
+];
+
+let techCat = 'all';
+window.initPage_tech = function() { renderTech(TECH_DATA); };
+
+function setTechCat(cat, el) {
+  techCat = cat;
+  document.querySelectorAll('#techFilterRow .f-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  filterTech();
+}
+function filterTech() {
+  const q = (document.getElementById('techSearch')?.value || '').toLowerCase();
+  const list = TECH_DATA.filter(t =>
+    (techCat === 'all' || t.cat === techCat) &&
+    (!q || t.name.toLowerCase().includes(q) || t.short.toLowerCase().includes(q) || t.subsidy.toLowerCase().includes(q))
+  );
+  setTxt('techCount', list.length + ' item' + (list.length !== 1 ? 's' : '') + ' found');
+  renderTech(list);
+}
+
+function renderTech(list) {
+  const el = document.getElementById('techGrid'); if (!el) return;
+  if (!list.length) { el.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span class="material-icons">precision_manufacturing</span><h4>No items found</h4><p>Try different filters</p></div>`; return; }
+  el.innerHTML = list.map((t, i) => `
+    <div class="img-card" onclick="openTechDetail(${t.id})">
+      <div style="position:relative;">
+        <img class="img-card-img" src="${pimg(IMG.tech, t.img !== undefined ? t.img : i)}" alt="${t.name}" loading="lazy" onerror="this.style.background='var(--primary-light)'"/>
+        ${t.subsidy ? `<div style="position:absolute;top:8px;right:8px;"><span class="badge bdg-yellow" style="font-size:9px;background:rgba(249,168,37,0.9);color:#1A1A1A;">${t.subsidy.split(' ').slice(0,2).join(' ')}</span></div>` : ''}
+      </div>
+      <div class="img-card-body">
+        <div class="img-card-cat">${t.cat.charAt(0).toUpperCase() + t.cat.slice(1)}</div>
+        <div class="img-card-title">${t.name}</div>
+        <div class="img-card-desc">${t.short}</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:800;color:var(--primary);margin-bottom:4px;">${t.price}</div>
+        ${t.subsidy ? `<div style="font-size:11px;color:var(--warning);font-weight:600;">${t.subsidy}</div>` : ''}
+      </div>
+      <div class="img-card-foot">
+        <button class="btn btn-accent btn-sm" onclick="event.stopPropagation();buyTech(${t.id})"><span class="material-icons">shopping_bag</span>Buy / Rent</button>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openTechDetail(${t.id})"><span class="material-icons">info</span>More Details</button>
+      </div>
+    </div>`).join('');
+}
+
+function openTechDetail(id) {
+  const t = TECH_DATA.find(x => x.id === id); if (!t) return;
+  setTxt('tmTitle', t.name);
+  document.getElementById('tmBody').innerHTML = `
+    <img src="${pimg(IMG.tech, t.img !== undefined ? t.img : 0)}" alt="${t.name}" style="width:100%;height:180px;object-fit:cover;border-radius:var(--r-sm);margin-bottom:14px;" loading="lazy"/>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div><div style="font-family:'Poppins',sans-serif;font-size:19px;font-weight:800;color:var(--primary);">${t.price}</div>${t.subsidy?`<div style="font-size:12px;color:var(--warning);font-weight:600;">${t.subsidy}</div>`:''}</div>
+      <span class="badge bdg-green" style="font-size:11px;">${t.cat.charAt(0).toUpperCase()+t.cat.slice(1)}</span>
+    </div>
+    <p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:14px;">${t.desc}</p>
+    <div class="s-label" style="margin-bottom:9px;">Key Specifications</div>
+    ${t.specs.map(s=>`<div style="display:flex;align-items:flex-start;gap:8px;font-size:13px;margin-bottom:8px;"><span class="material-icons" style="font-size:16px;color:var(--primary);flex-shrink:0;margin-top:1px;">check_circle</span>${s}</div>`).join('')}
+    ${t.subsidy_detail?`<div class="divider"></div><div class="s-label" style="margin-bottom:8px;">Subsidy &amp; Scheme Details</div><div class="info-box ib-yellow" style="margin-bottom:14px;"><span class="material-icons">account_balance</span><p>${t.subsidy_detail}</p></div>`:'<div style="height:14px;"></div>'}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+      <button class="btn btn-accent btn-full" onclick="buyTech(${t.id})"><span class="material-icons">shopping_bag</span>Buy / Rent Now</button>
+      <button class="btn btn-outline btn-full" onclick="expertQuery('${t.name}')"><span class="material-icons">support_agent</span>Talk to Expert</button>
+    </div>`;
+  openModal('techModal');
+}
+
+function buyTech(id) {
+  const t = TECH_DATA.find(x => x.id === id);
+  const msg = encodeURIComponent(`Hello, I am interested in purchasing/renting ${t?.name || 'this equipment'} (${t?.price || ''}) listed on KisanBazaar AI. Please send details and availability.`);
+  window.open(`https://wa.me/?text=${msg}`, '_blank');
+}
+function expertQuery(name) {
+  toast('Connecting you to a farming technology expert for: ' + name, 'info');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>AI Advisory — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+.chat-shell{display:flex;flex-direction:column;height:calc(100vh - var(--header-h) - var(--bottom-h) - 100px);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-sm);}
+.chat-chips{background:var(--card);border-bottom:1px solid var(--border);padding:10px 13px;display:flex;gap:7px;flex-wrap:wrap;}
+.c-chip{padding:6px 12px;background:var(--primary-light);border:1.5px solid #C8E6C9;border-radius:var(--r-full);font-size:11.5px;font-weight:600;color:var(--primary-dark);cursor:pointer;font-family:'Poppins',sans-serif;display:flex;align-items:center;gap:4px;transition:all .18s;}
+.c-chip .material-icons{font-size:13px;}
+.c-chip:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:13px;}
+.msg-r{display:flex;gap:9px;align-items:flex-end;max-width:88%;}
+.msg-r.ai-m{align-self:flex-start;} .msg-r.usr-m{align-self:flex-end;flex-direction:row-reverse;}
+.msg-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.av-ai{background:var(--primary);box-shadow:var(--shadow-green);} .av-ai .material-icons{font-size:16px;color:#fff;}
+.av-usr{background:var(--accent);} .av-usr .material-icons{font-size:16px;color:#333;}
+.msg-inner{display:flex;flex-direction:column;gap:3px;}
+.bbl{padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.6;}
+.bbl-ai{background:var(--card);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text);box-shadow:var(--shadow-xs);}
+.bbl-usr{background:var(--primary);color:#fff;border-bottom-right-radius:4px;}
+.msg-ts{font-size:9.5px;color:var(--text-muted);opacity:.6;padding:0 3px;}
+.usr-m .msg-ts{text-align:right;}
+.t-bbl{background:var(--card);border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;padding:12px 17px;display:flex;align-items:center;gap:5px;box-shadow:var(--shadow-xs);}
+.t-d{width:7px;height:7px;background:var(--text-muted);border-radius:50%;animation:td 1.3s ease infinite;}
+.t-d:nth-child(2){animation-delay:.22s;} .t-d:nth-child(3){animation-delay:.44s;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-6px);opacity:1}}
+.chat-input-bar{background:var(--card);border-top:1.5px solid var(--border);padding:11px 13px;display:flex;align-items:center;gap:9px;}
+.chat-inp{flex:1;padding:10px 16px;border:1.5px solid var(--border);border-radius:var(--r-full);font-size:13px;background:var(--bg);transition:border-color .18s,background .18s;}
+.chat-inp:focus{border-color:var(--primary);background:#fff;outline:none;}
+.mic-btn{width:40px;height:40px;background:var(--bg);border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;}
+.mic-btn.on{background:#FFEBEE;border-color:#EF9A9A;}
+.mic-btn .material-icons{font-size:20px;color:var(--text-muted);}
+.mic-btn.on .material-icons{color:var(--danger);}
+.send-btn{width:40px;height:40px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;box-shadow:var(--shadow-green);transition:all .18s;}
+.send-btn:hover{background:var(--primary-dark);}
+.send-btn .material-icons{font-size:20px;color:#fff;}
+.adv-panel-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px;box-shadow:var(--shadow-xs);}
+.apc-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;}
+.apc-head .material-icons{font-size:19px;color:var(--primary);}
+</style>
+</head>
+<body data-page="advisory">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar"><span class="material-icons">psychology</span><h2>AI Farming Assistant</h2><div class="kb-pgbar-right"><span class="badge bdg-live"><span class="material-icons">circle</span>AI Online</span></div></div>
+
+  <!-- Smart Suggestions Panel -->
+  <div class="adv-panel-card">
+    <div class="apc-head"><span class="material-icons">tips_and_updates</span>Smart Insights for Your Farm</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+      <div style="background:var(--primary-pale);border:1px solid #C8E6C9;border-radius:var(--r-sm);padding:11px;">
+        <div style="font-size:10px;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;">NDVI Field Health</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:800;color:var(--primary);">0.72</div>
+        <div style="font-size:11px;color:var(--text-muted);">Healthy — Above average</div>
+      </div>
+      <div style="background:#FFF8E1;border:1px solid #FFE082;border-radius:var(--r-sm);padding:11px;">
+        <div style="font-size:10px;color:#E65100;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;">Yield Forecast</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:800;color:#E65100;">8.4 q/ac</div>
+        <div style="font-size:11px;color:var(--text-muted);">Soybean estimate</div>
+      </div>
+      <div style="background:#E3F2FD;border:1px solid #BBDEFB;border-radius:var(--r-sm);padding:11px;">
+        <div style="font-size:10px;color:#1565C0;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;">Water Advisory</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#1565C0;">Skip 2 Days</div>
+        <div style="font-size:11px;color:var(--text-muted);">Rain expected tomorrow</div>
+      </div>
+      <div style="background:#FFEBEE;border:1px solid #FFCDD2;border-radius:var(--r-sm);padding:11px;">
+        <div style="font-size:10px;color:#C62828;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px;">Spray Advisory</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:#C62828;">Not Recommended</div>
+        <div style="font-size:11px;color:var(--text-muted);">Rain tomorrow — wait 48h</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice UI indicator -->
+  <div style="display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 14px;margin-bottom:14px;">
+    <span class="material-icons" style="font-size:18px;color:var(--primary);">mic</span>
+    <span style="font-size:12.5px;color:var(--text-muted);">Voice input supported &middot; Speak your question in your language &middot; <strong style="color:var(--primary);">6 languages</strong></span>
+    <span class="badge bdg-green" style="margin-left:auto;">Ready</span>
+  </div>
+
+  <!-- Chat Interface -->
+  <div class="s-label" style="margin-bottom:10px;">AI Chat — Ask Anything About Farming</div>
+  <div class="chat-shell" id="chatShell">
+    <div class="chat-chips">
+      <div class="c-chip" onclick="sendChip('What is the best crop for this season?')"><span class="material-icons">eco</span>Best crop?</div>
+      <div class="c-chip" onclick="sendChip('My leaves are turning yellow — what to do?')"><span class="material-icons">yard</span>Yellow leaves</div>
+      <div class="c-chip" onclick="sendChip('Irrigation schedule for soybean crop')"><span class="material-icons">water_drop</span>Irrigation</div>
+      <div class="c-chip" onclick="sendChip('Best fertilizer for black cotton soil')"><span class="material-icons">science</span>Fertilizer</div>
+      <div class="c-chip" onclick="sendChip('What government schemes am I eligible for?')"><span class="material-icons">account_balance</span>Schemes</div>
+      <div class="c-chip" onclick="sendChip('How to control pests organically?')"><span class="material-icons">pest_control</span>Pest control</div>
+    </div>
+    <div class="chat-msgs" id="chatMsgs">
+      <div class="msg-r ai-m">
+        <div class="msg-av av-ai"><span class="material-icons">smart_toy</span></div>
+        <div class="msg-inner">
+          <div class="bbl bbl-ai"><strong style="font-family:'Poppins',sans-serif;color:var(--primary);">Namaste! I am your KisanBazaar AI Farming Assistant.</strong><br/><br/>I can help you with:<br/>• Crop selection based on your soil and season<br/>• Disease identification and treatment<br/>• Irrigation and fertiliser scheduling<br/>• Market price guidance<br/>• Government scheme eligibility<br/><br/>Ask me anything about farming — in any language!</div>
+          <div class="msg-ts">AI Farming Assistant &middot; Available 24x7</div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()"><span class="material-icons">mic</span></button>
+      <input class="chat-inp" id="chatInp" type="text" placeholder="Ask your farming question..." autocomplete="off"/>
+      <button class="send-btn" onclick="sendMsg()"><span class="material-icons">send</span></button>
+    </div>
+  </div>
+</div>
+</main>
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const AI_R = {
+  crop:{kw:['crop','grow','best crop','sow','cultivate','plant'],r:`Based on your location and soil type, here are my top recommendations:<br/><br/><strong>1. Soybean</strong> — Best fit for Black Cotton soil in Kharif. Expected: 8-10 q/acre. Profit: Rs.15,000-18,000/acre<br/><strong>2. Cotton (Bt Hybrid)</strong> — High value cash crop. Profit: Rs.20,000-25,000/acre<br/><strong>3. Tur Dal (Pigeon Pea)</strong> — Water-efficient, low input cost, good returns<br/><br/>Would you like detailed cultivation guidance for any of these?`},
+  yellow:{kw:['yellow','yellowing','pale','leaf','colour','color'],r:`<strong>Yellow Leaves — Step-by-Step Diagnosis:</strong><br/><br/><strong>Cause 1: Nitrogen deficiency</strong> — Yellowing starts from older bottom leaves. Fix: Apply Urea 2% foliar spray<br/><strong>Cause 2: Iron deficiency</strong> — Yellow between veins, veins stay green. Fix: Ferrous Sulphate spray<br/><strong>Cause 3: Overwatering</strong> — General yellowing with wilting. Fix: Stop irrigation for 3 days<br/><strong>Cause 4: Fungal disease</strong> — Yellow-brown spots with rings. Fix: Mancozeb 75% WP spray<br/><br/>Upload a photo in the <strong>Scan tab</strong> for precise AI diagnosis.`},
+  irrigat:{kw:['irrigat','water','drip','moisture','schedule','when to water'],r:`<strong>Irrigation Schedule for Your Crops:</strong><br/><br/><strong>Soybean:</strong> Every 8-10 days in vegetative stage. Critical during flowering — maintain 50-60% soil moisture<br/><strong>Cotton:</strong> Every 10-12 days vegetative, every 7-8 days during boll formation. Stop 20 days before harvest<br/><strong>Onion:</strong> Every 5-7 days. Critical during bulb development stage<br/><br/>Current advisory: Heavy rain forecast tomorrow — skip irrigation for 2 days.`},
+  fertiliz:{kw:['fertilizer','fertiliser','npk','urea','dap','nutrient','manure'],r:`<strong>Fertilizer Guide — Black Cotton Soil:</strong><br/><br/><strong>Basal dose at sowing:</strong><br/>DAP: 50 kg/acre &middot; MOP (Potash): 25 kg/acre &middot; Zinc Sulphate: 5 kg/acre<br/><br/><strong>Top dressing at 30-35 DAS:</strong><br/>Neem-coated Urea: 30-35 kg/acre<br/><br/><strong>Organic option:</strong><br/>Vermicompost: 1-2 t/acre before sowing &middot; Jeevamrut: 200 litres/acre<br/><br/>Get your free Soil Health Card from local Krishi Kendra for exact recommendations.`},
+  scheme:{kw:['scheme','govt','yojana','subsidy','loan','kisan','benefit','apply'],r:`<strong>Top Government Schemes for You:</strong><br/><br/><strong>1. PM-KISAN</strong> — Rs.6,000/year direct to bank. Apply: pmkisan.gov.in<br/><strong>2. PM Fasal Bima</strong> — Crop insurance at 2% premium. Deadline: 31 Jul 2025<br/><strong>3. Kisan Credit Card</strong> — Up to Rs.3 lakh at 4% annual interest<br/><strong>4. PM Sinchai Yojana</strong> — 55% subsidy on drip/sprinkler irrigation<br/><strong>5. PM-KUSUM Solar Pump</strong> — 90% subsidised solar pump<br/><br/>Visit the <strong>Govt Schemes</strong> page for complete details and apply links.`},
+  pest:{kw:['pest','insect','worm','bollworm','whitefly','spray','bug','disease'],r:`<strong>Organic Pest Control Methods:</strong><br/><br/><strong>Neem Oil Spray (5%)</strong> — Effective against most sucking pests. Apply every 10 days in evening<br/><strong>Garlic-Chilli Spray</strong> — 100g garlic + 100g chilli in 10L water. Filter and spray<br/><strong>Yellow Sticky Traps</strong> — For whitefly and thrips. Install 5 traps per acre<br/><strong>Pheromone Traps</strong> — For bollworm in cotton. 5 traps per acre from 30 days after sowing<br/><strong>Trichogramma Release</strong> — Biological egg parasite. Available from KVK<br/><br/>Upload a crop photo in the <strong>Scan tab</strong> for precise AI disease identification.`},
+  def:{r:`Thank you for your question. I want to give you accurate advice.<br/><br/>Could you give me more details? For example:<br/>• Which crop are you asking about?<br/>• What problem are you seeing — yellowing, wilting, spots?<br/>• How many days since sowing?<br/><br/>You can also:<br/>• Use the <strong>Scan tab</strong> for disease identification<br/>• Call Kisan Helpline: <strong>1800-180-1551</strong> (Free, 24x7)<br/>• Visit the <strong>Govt Schemes</strong> page for financial support`},
+};
+let micOn = false;
+window.initPage_advisory = function() {};
+function sendChip(t){document.getElementById('chatInp').value=t;sendMsg();}
+function sendMsg(){const inp=document.getElementById('chatInp');const t=inp.value.trim();if(!t)return;addMsg(t,'usr');inp.value='';const tid=showTyping();setTimeout(()=>{removeTyping(tid);addMsg(getReply(t),'ai');},1000+Math.random()*800);}
+function addMsg(txt,sender){const a=document.getElementById('chatMsgs');const now=new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});const isAI=sender==='ai';const d=document.createElement('div');d.className='msg-r '+(isAI?'ai-m':'usr-m');d.innerHTML=`<div class="msg-av ${isAI?'av-ai':'av-usr'}"><span class="material-icons">${isAI?'smart_toy':'person'}</span></div><div class="msg-inner"><div class="bbl ${isAI?'bbl-ai':'bbl-usr'}">${isAI?txt:esc(txt)}</div><div class="msg-ts">${now}${isAI?' &middot; AI':''}</div></div>`;a.appendChild(d);a.scrollTop=a.scrollHeight;}
+function showTyping(){const a=document.getElementById('chatMsgs');const id='typ-'+Date.now();const d=document.createElement('div');d.id=id;d.className='msg-r ai-m';d.innerHTML=`<div class="msg-av av-ai"><span class="material-icons">smart_toy</span></div><div class="t-bbl"><div class="t-d"></div><div class="t-d"></div><div class="t-d"></div></div>`;a.appendChild(d);a.scrollTop=a.scrollHeight;return id;}
+function removeTyping(id){document.getElementById(id)?.remove();}
+function getReply(txt){const l=txt.toLowerCase();for(const[k,d]of Object.entries(AI_R)){if(k==='def')continue;if(d.kw.some(w=>l.includes(w)))return d.r;}return AI_R.def.r;}
+function toggleMic(){const btn=document.getElementById('micBtn');micOn=!micOn;btn.classList.toggle('on',micOn);btn.querySelector('.material-icons').textContent=micOn?'mic_off':'mic';if(micOn){toast('Listening — speak your farming question','info');setTimeout(()=>{if(micOn){micOn=false;btn.classList.remove('on');btn.querySelector('.material-icons').textContent='mic';document.getElementById('chatInp').value='When should I irrigate my Soybean crop?';toast('Voice captured — tap Send','success');}},3000);}}
+document.getElementById('chatInp')?.addEventListener('keypress',e=>{if(e.key==='Enter')sendMsg();});
+</script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Home — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="home">
+<div id="kb-header-ph"></div>
+
+<main class="kb-page">
+<div class="kb-container">
+
+  <!-- Govt Strip -->
+  <div class="govt-strip">
+    <div class="tricolor"></div>
+    <div class="govt-strip-txt">
+      <strong>Ministry of Agriculture &amp; Farmers Welfare — Govt. of India</strong>
+      <span>National Agriculture Digital Mission (NADM) · Kisan Portal ID: <span id="farmerIdStrip">—</span></span>
+    </div>
+  </div>
+
+  <!-- Profile Banner (shown if profile incomplete) -->
+  <div id="profileBanner" style="display:none;background:linear-gradient(135deg,#E65100,#F57F17);border-radius:var(--r-lg);padding:14px 16px;display:none;align-items:center;gap:13px;margin-bottom:16px;cursor:pointer;" onclick="location.href='profile.html'">
+    <div style="width:40px;height:40px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:22px;color:#fff;">person_add</span></div>
+    <div><div style="font-family:'Poppins',sans-serif;font-size:13.5px;font-weight:700;color:#fff;">Complete Your Profile</div><div style="font-size:11.5px;color:rgba(255,255,255,.82);">Add land &amp; crop details to unlock all features and get your Kisan ID</div></div>
+    <span class="material-icons" style="margin-left:auto;color:#fff;">chevron_right</span>
+  </div>
+
+  <!-- Welcome Card -->
+  <div class="welcome-card">
+    <div class="wc-greeting" id="wGreeting">Good Morning</div>
+    <div class="wc-name" id="wName">Welcome, Farmer</div>
+    <div class="wc-id" id="wId">Login to see your Kisan ID</div>
+    <div class="wc-stats">
+      <div><div class="wc-stat-val">4.5 Ac</div><div class="wc-stat-lbl">Land Area</div></div>
+      <div><div class="wc-stat-val">3 Crops</div><div class="wc-stat-lbl">Active</div></div>
+      <div><div class="wc-stat-val">Rs.12,400</div><div class="wc-stat-lbl">Last Income</div></div>
+    </div>
+  </div>
+
+  <!-- Price Ticker -->
+  <div class="ticker-bar">
+    <span class="ticker-lbl">LIVE MANDI</span>
+    <div class="ticker-scroll"><div class="ticker-inner" id="tickerInner">
+      <span class="ti"><span class="ti-name">Tomato</span><span class="ti-price">Rs.1,420/q</span><span class="ti-up"><span class="material-icons">arrow_drop_up</span>+8.4%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Onion</span><span class="ti-price">Rs.980/q</span><span class="ti-dn"><span class="material-icons">arrow_drop_down</span>-1.5%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Wheat</span><span class="ti-price">Rs.2,150/q</span><span class="ti-up"><span class="material-icons">arrow_drop_up</span>+1.9%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Groundnut</span><span class="ti-price">Rs.5,200/q</span><span class="ti-up"><span class="material-icons">arrow_drop_up</span>+2.1%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Cotton</span><span class="ti-price">Rs.6,800/q</span><span class="ti-dn"><span class="material-icons">arrow_drop_down</span>-0.3%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Tomato</span><span class="ti-price">Rs.1,420/q</span><span class="ti-up"><span class="material-icons">arrow_drop_up</span>+8.4%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Onion</span><span class="ti-price">Rs.980/q</span><span class="ti-dn"><span class="material-icons">arrow_drop_down</span>-1.5%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Wheat</span><span class="ti-price">Rs.2,150/q</span><span class="ti-up"><span class="material-icons">arrow_drop_up</span>+1.9%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Groundnut</span><span class="ti-price">Rs.5,200/q</span><span class="ti-up"><span class="material-icons">arrow_drop_up</span>+2.1%</span></span><span class="ti-sep">|</span>
+      <span class="ti"><span class="ti-name">Cotton</span><span class="ti-price">Rs.6,800/q</span><span class="ti-dn"><span class="material-icons">arrow_drop_down</span>-0.3%</span></span>
+    </div></div>
+  </div>
+
+  <!-- HERO CAROUSEL -->
+  <div class="hero-carousel" id="heroCarousel">
+    <div class="hero-slides">
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=900&q=80" alt="Farmer in field"/>
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-chip">AI-Powered Advisory</div>
+          <div class="hero-title">Smarter Farming<br/>Starts Here</div>
+          <div class="hero-sub">Get personalised crop recommendations, disease alerts &amp; market insights</div>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=900&q=80" alt="Crop fields"/>
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-chip">Live Market Prices</div>
+          <div class="hero-title">Best Price<br/>Every Time</div>
+          <div class="hero-sub">Track mandi prices in real-time and choose the best time to sell your produce</div>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <img src="https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?w=900&q=80" alt="Modern farming technology"/>
+        <div class="hero-slide-overlay"></div>
+        <div class="hero-content">
+          <div class="hero-chip">Government Schemes</div>
+          <div class="hero-title">Access Every Scheme<br/>You Deserve</div>
+          <div class="hero-sub">PM-KISAN, Fasal Bima, KCC Loan — all in one place with easy apply</div>
+        </div>
+      </div>
+    </div>
+    <button class="hero-prev" aria-label="Previous"><span class="material-icons">chevron_left</span></button>
+    <button class="hero-next" aria-label="Next"><span class="material-icons">chevron_right</span></button>
+    <div class="hero-dots">
+      <div class="hero-dot active"></div>
+      <div class="hero-dot"></div>
+      <div class="hero-dot"></div>
+    </div>
+  </div>
+
+  <!-- AI Suggestion -->
+  <div class="ai-card">
+    <div class="ai-icon"><span class="material-icons">smart_toy</span></div>
+    <div style="flex:1;">
+      <div class="ai-tag">AI Recommendation</div>
+      <div class="ai-text" id="aiSug">Best crop this week: Groundnut</div>
+      <div class="ai-sub" id="aiSub">Select your location for personalised, real-time recommendations</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div style="margin-bottom:18px;">
+    <div class="sec-head"><div class="sec-head-title"><span class="material-icons">bolt</span>Quick Actions</div></div>
+    <div class="qa-grid">
+      <div class="qa-item" onclick="location.href='advisory.html'"><div class="qa-icon ic-g"><span class="material-icons">psychology</span></div><span class="qa-lbl">AI Advisory</span></div>
+      <div class="qa-item" onclick="location.href='market.html'">  <div class="qa-icon ic-y"><span class="material-icons">sell</span></div><span class="qa-lbl">Sell Product</span></div>
+      <div class="qa-item" onclick="location.href='check-price.html'"><div class="qa-icon ic-b"><span class="material-icons">trending_up</span></div><span class="qa-lbl">Check Price</span></div>
+      <div class="qa-item" onclick="location.href='scan.html'">    <div class="qa-icon ic-o"><span class="material-icons">document_scanner</span></div><span class="qa-lbl">Scan Crop</span></div>
+      <div class="qa-item" onclick="location.href='govt.html'">    <div class="qa-icon ic-p"><span class="material-icons">account_balance</span></div><span class="qa-lbl">Govt Schemes</span></div>
+      <div class="qa-item" onclick="location.href='my-crops.html'"><div class="qa-icon ic-t"><span class="material-icons">grass</span></div><span class="qa-lbl">My Crops</span></div>
+      <div class="qa-item" onclick="location.href='buy-inputs.html'"><div class="qa-icon ic-i"><span class="material-icons">science</span></div><span class="qa-lbl">Buy Inputs</span></div>
+      <div class="qa-item" onclick="location.href='learn.html'">   <div class="qa-icon ic-r"><span class="material-icons">school</span></div><span class="qa-lbl">Learn</span></div>
+    </div>
+  </div>
+
+  <!-- Main 2-col layout -->
+  <div class="home-2col">
+    <div>
+      <!-- Weather Card -->
+      <div class="weather-card" style="margin-bottom:18px;">
+        <div class="wc-top">
+          <div class="wc-loc"><span class="material-icons">location_on</span><span id="wLoc">Select location</span></div>
+          <span class="badge bdg-live"><span class="material-icons">circle</span>Live</span>
+        </div>
+        <div class="wc-main">
+          <div class="wc-icon"><span class="material-icons" id="wIcon">wb_sunny</span></div>
+          <div class="wc-temp" id="wTemp">--</div>
+        </div>
+        <div class="wc-cond" id="wCond">Set your location to see live weather</div>
+        <div class="wc-stats">
+          <div class="wc-stat"><span class="material-icons">water_drop</span><span id="wHumid">-- Humidity</span></div>
+          <div class="wc-stat"><span class="material-icons">umbrella</span><span id="wRain">-- Rain</span></div>
+          <div class="wc-stat"><span class="material-icons">air</span><span id="wWind">--</span></div>
+        </div>
+        <div class="wc-alert" id="wAlert" style="display:none;">
+          <span class="material-icons">warning</span><span id="wAlertTxt"></span>
+        </div>
+      </div>
+
+      <!-- My Crops -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-head">
+          <div class="card-head-title"><span class="material-icons">grass</span>My Active Crops</div>
+          <a href="my-crops.html" class="btn btn-ghost btn-xs"><span class="material-icons">open_in_new</span>View All</a>
+        </div>
+        <div id="homeCropsList" style="padding:0 16px;"></div>
+        <div class="card-foot">
+          <a href="my-crops.html" class="btn btn-outline btn-sm btn-full"><span class="material-icons">add</span>Add / Manage Crops</a>
+        </div>
+      </div>
+
+      <!-- Today's Prices -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-title"><span class="material-icons">trending_up</span>Today's Prices</div>
+          <a href="check-price.html" class="btn btn-ghost btn-xs"><span class="material-icons">bar_chart</span>Full Chart</a>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);padding:6px 16px 0;display:flex;align-items:center;gap:4px;"><span class="material-icons" style="font-size:13px;color:var(--primary);">storefront</span><span id="homeMandi">Pune APMC Mandi</span></div>
+        <div class="price-tbl-wrap">
+          <table class="price-tbl"><thead><tr><th>Crop</th><th>Today (Rs./q)</th><th>Change</th></tr></thead>
+          <tbody id="homePriceTbl"></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Season Summary -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-head"><div class="card-head-title"><span class="material-icons">bar_chart</span>Season Summary</div></div>
+        <div style="padding:0 16px;">
+          <div class="prof-row"><span class="prof-row-key">Total Income</span><span class="prof-row-val" style="color:var(--success);">Rs.48,200</span></div>
+          <div class="prof-row"><span class="prof-row-key">Expenditure</span><span class="prof-row-val" style="color:var(--danger);">Rs.19,800</span></div>
+          <div class="prof-row"><span class="prof-row-key">Net Profit</span><span class="prof-row-val" style="color:var(--success);">Rs.28,400</span></div>
+          <div class="prof-row"><span class="prof-row-key">Schemes Applied</span><span class="prof-row-val">3</span></div>
+          <div class="prof-row" style="border-bottom:none;"><span class="prof-row-key">Products Sold</span><span class="prof-row-val">8 listings</span></div>
+        </div>
+      </div>
+
+      <!-- Kisan Helpline -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-head"><div class="card-head-title"><span class="material-icons">contact_phone</span>Kisan Helpline</div></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="helpline-card" onclick="location.href='tel:18001801551'">
+            <div class="helpline-icon" style="background:#E8F5E9;"><span class="material-icons" style="color:#2E7D32;">call</span></div>
+            <div><div class="helpline-num">1800-180-1551</div><div class="helpline-lbl">Kisan Call Centre (Free · 24x7)</div></div>
+            <span class="material-icons" style="margin-left:auto;color:var(--text-muted);">chevron_right</span>
+          </div>
+          <div class="helpline-card" onclick="location.href='tel:14567'">
+            <div class="helpline-icon" style="background:#E3F2FD;"><span class="material-icons" style="color:#1565C0;">call</span></div>
+            <div><div class="helpline-num">14567</div><div class="helpline-lbl">PM-KISAN Helpline (Free)</div></div>
+            <span class="material-icons" style="margin-left:auto;color:var(--text-muted);">chevron_right</span>
+          </div>
+          <div class="helpline-card" onclick="location.href='tel:14447'">
+            <div class="helpline-icon" style="background:#FFF8E1;"><span class="material-icons" style="color:#E65100;">call</span></div>
+            <div><div class="helpline-num">14447</div><div class="helpline-lbl">Crop Insurance Helpline</div></div>
+            <span class="material-icons" style="margin-left:auto;color:var(--text-muted);">chevron_right</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kisan ID Card -->
+      <div id="kisanCardWrap" style="display:none;">
+        <div style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:var(--r-lg);padding:16px 18px;color:#fff;margin-bottom:18px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div style="display:flex;align-items:center;gap:7px;"><div class="kb-logo-icon" style="width:28px;height:28px;"><span class="material-icons" style="font-size:16px;">eco</span></div><div style="font-family:'Poppins',sans-serif;font-size:11.5px;font-weight:700;color:#fff;">Kisan Card</div></div>
+            <div style="font-size:9px;opacity:.65;text-transform:uppercase;letter-spacing:1px;">Govt. of India</div>
+          </div>
+          <div style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;letter-spacing:2px;color:var(--accent);margin-bottom:4px;" id="homeKisanId">—</div>
+          <div style="font-size:11px;opacity:.78;" id="homeKisanName">—</div>
+          <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.18);">
+            <div><div style="font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.7px;margin-bottom:1px;">Location</div><div style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;" id="homeKisanLoc">—</div></div>
+            <div style="text-align:right;"><div style="font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.7px;margin-bottom:1px;">Valid</div><div style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;">Mar 2026</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Govt Schemes Section (with real images) -->
+  <div class="kb-section">
+    <div class="sec-head">
+      <div class="sec-head-title"><span class="material-icons">account_balance</span>Government Schemes</div>
+      <a href="govt.html" class="sec-head-link">View All <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="kb-grid" id="homeSchemes"></div>
+  </div>
+
+  <!-- Learn Hub (with real images) -->
+  <div class="kb-section">
+    <div class="sec-head">
+      <div class="sec-head-title"><span class="material-icons">school</span>Learning Hub</div>
+      <a href="learn.html" class="sec-head-link">All Videos <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="kb-grid" id="homeLearn"></div>
+  </div>
+
+  <!-- New Technologies (with real images) -->
+  <div class="kb-section">
+    <div class="sec-head">
+      <div class="sec-head-title"><span class="material-icons">precision_manufacturing</span>New Technologies</div>
+      <a href="tech.html" class="sec-head-link">Explore All <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="kb-grid" id="homeTech"></div>
+  </div>
+
+</div>
+</main>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+
+<script src="script.js"></script>
+<script>
+const SCHEME_DATA = [
+  {name:'PM-KISAN Samman Nidhi',desc:'Rs.6,000/year direct income support in three instalments.',tag:'Income Support',img:0,href:'govt.html'},
+  {name:'PM Fasal Bima Yojana',desc:'Comprehensive crop insurance at just 2% premium for Kharif.',tag:'Insurance',img:1,href:'govt.html'},
+  {name:'Kisan Credit Card',desc:'Up to Rs.3 lakh crop loan at subsidised 4% annual interest.',tag:'Loan',img:2,href:'govt.html'},
+  {name:'PM Sinchai Yojana',desc:'55% subsidy on drip and sprinkler irrigation systems.',tag:'Subsidy',img:3,href:'govt.html'},
+];
+const LEARN_DATA = [
+  {cat:'Organic Farming',title:'Vermicompost at Home in 30 Days',desc:'Learn to convert farm waste into premium organic manure at zero cost.',img:0,href:'learn.html'},
+  {cat:'Pest Control',   title:'Neem-Garlic Spray for Pest Control',desc:'Natural, zero-cost pest control solution you can prepare at home.',img:2,href:'learn.html'},
+  {cat:'Finance',        title:'PM-KISAN Registration Guide',desc:'Step-by-step guide to register and receive your Rs.6,000 benefit.',img:4,href:'learn.html'},
+  {cat:'Soil Health',    title:'Soil Testing — Why and How',desc:'Understand your soil NPK levels and get crop-specific recommendations.',img:5,href:'learn.html'},
+];
+const TECH_DATA = [
+  {cat:'Irrigation',     title:'Drip Irrigation System',desc:'Reduces water usage by 60%. 55% subsidy under PM Sinchai Yojana.',img:0,href:'tech.html'},
+  {cat:'Drones',         title:'Crop Monitoring Drone',desc:'Cover 10 acres/hour with precision spraying and NDVI mapping.',img:1,href:'tech.html'},
+  {cat:'Solar',          title:'PM-KUSUM Solar Pump',desc:'90% subsidised solar pump — zero electricity cost for lifetime.',img:2,href:'tech.html'},
+  {cat:'Smart Sensors',  title:'IoT Soil Sensor Kit',desc:'Real-time soil moisture and NPK monitoring with phone alerts.',img:3,href:'tech.html'},
+];
+
+window.initPage_home = function() {
+  setTxt('wGreeting', getGreeting());
+
+  // User data
+  if (KB.user) {
+    setTxt('wName', KB.user.name || 'Ramesh Kumar');
+    if (KB.location) {
+      const fid = generateFarmerID(KB.location.state, KB.location.district, KB.location.mandal, KB.user.role||'farmer', 1);
+      setTxt('wId', 'Kisan ID: ' + fid);
+      setTxt('farmerIdStrip', fid);
+      setTxt('homeKisanId', fid);
+      setTxt('homeKisanName', KB.user.name);
+      setTxt('homeKisanLoc', [KB.location.district, KB.location.state].filter(Boolean).join(', '));
+      document.getElementById('kisanCardWrap').style.display = 'block';
+    }
+  } else {
+    document.getElementById('profileBanner').style.display = 'flex';
+  }
+
+  // Location-based updates
+  window.onLocationChange = function(loc) {
+    updateHomeWeather(loc.state);
+    updateHomePrices(loc.state);
+    updateHomeAI(loc.state);
+    setTxt('wLoc', [loc.district, loc.state].filter(Boolean).join(', '));
+    if (KB.user) {
+      const fid = generateFarmerID(loc.state, loc.district, loc.mandal, KB.user.role||'farmer', 1);
+      setTxt('wId','Kisan ID: '+fid); setTxt('farmerIdStrip',fid); setTxt('homeKisanId',fid);
+      setTxt('homeKisanLoc',[loc.district,loc.state].filter(Boolean).join(', '));
+      document.getElementById('kisanCardWrap').style.display='block';
+    }
+  };
+  if (KB.location) window.onLocationChange(KB.location);
+
+  initCarousel('heroCarousel');
+
+  // Ticker hover pause
+  const ti = document.getElementById('tickerInner');
+  if (ti) { ti.addEventListener('mouseenter',()=>ti.style.animationPlayState='paused'); ti.addEventListener('mouseleave',()=>ti.style.animationPlayState='running'); }
+
+  renderHomeCrops();
+  renderHomeSchemes();
+  renderHomeLearn();
+  renderHomeTech();
+};
+
+/* Update from location */
+function updateHomeWeather(state) {
+  const w = LOC_WEATHER[state] || LOC_WEATHER['Maharashtra'];
+  setTxt('wTemp', w.temp); setTxt('wCond', w.cond + ' — Feels like '+(parseInt(w.temp)+2)+'°C');
+  setTxt('wHumid', w.humid+' Humidity'); setTxt('wRain', w.rain+' Rain'); setTxt('wWind', w.wind);
+  const ic = document.getElementById('wIcon'); if(ic) ic.textContent = w.icon;
+  const al = document.getElementById('wAlert'); const at = document.getElementById('wAlertTxt');
+  if(al&&at){at.textContent=w.alert;al.style.display='flex';}
+  setTxt('wLoc', [KB.location?.district,KB.location?.state].filter(Boolean).join(', '));
+}
+function updateHomePrices(state) {
+  const pd = LOC_PRICES[state]||LOC_PRICES['Maharashtra'];
+  setTxt('homeMandi', pd.mandi);
+  const el = document.getElementById('homePriceTbl'); if(!el) return;
+  el.innerHTML=(pd.rows||[]).slice(0,5).map(r=>`
+    <tr>
+      <td>${r.crop}</td>
+      <td style="font-family:'Poppins',sans-serif;font-weight:700;">Rs.${fmt(r.today)}</td>
+      <td><div class="${r.ch>0?'td-up':'td-dn'}"><span class="material-icons">${r.ch>0?'arrow_drop_up':'arrow_drop_down'}</span>${r.ch>0?'+':''}${r.ch}%</div></td>
+    </tr>`).join('');
+}
+function updateHomeAI(state) {
+  const s = LOC_AI[state]||LOC_AI['Maharashtra'];
+  setTxt('aiSug', s.sug); setTxt('aiSub', s.sub);
+}
+
+/* Crops list */
+const CROPS_LIST = [
+  {name:'Soybean',area:'2.0 Acre',stage:'Flowering',  health:82},
+  {name:'Cotton', area:'1.5 Acre',stage:'Vegetative', health:90},
+  {name:'Onion',  area:'1.0 Acre',stage:'Germination',health:65},
+];
+function renderHomeCrops() {
+  const el = document.getElementById('homeCropsList'); if(!el) return;
+  el.innerHTML = CROPS_LIST.map(c=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border-light);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:10px;height:10px;border-radius:50%;background:${c.health>80?'#2E7D32':c.health>60?'#F57F17':'#C62828'};flex-shrink:0;"></div>
+        <div><div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;">${c.name}</div><div style="font-size:11px;color:var(--text-muted);">${c.area} &middot; ${c.stage}</div></div>
+      </div>
+      <span class="badge ${c.health>80?'bdg-green':c.health>60?'bdg-yellow':'bdg-red'}">${c.health>80?'Healthy':c.health>60?'Warning':'Attention'}</span>
+    </div>`).join('');
+}
+
+/* Image-based card sections */
+function renderHomeSchemes() {
+  const el = document.getElementById('homeSchemes'); if(!el) return;
+  el.innerHTML = SCHEME_DATA.map((s,i)=>`
+    <div class="scheme-card" onclick="location.href='${s.href}'">
+      <img class="scheme-card-img" src="${pimg(IMG.schemes,i)}" alt="${s.name}" loading="lazy"/>
+      <div class="scheme-card-body">
+        <div class="scheme-badge">${s.tag}</div>
+        <div class="scheme-name">${s.name}</div>
+        <div class="scheme-desc">${s.desc}</div>
+      </div>
+      <div class="scheme-foot">
+        <span class="badge bdg-green" style="font-size:10px;">Govt Verified</span>
+        <button class="btn btn-accent btn-xs" onclick="event.stopPropagation();location.href='${s.href}'">Apply Now</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderHomeLearn() {
+  const el = document.getElementById('homeLearn'); if(!el) return;
+  el.innerHTML = LEARN_DATA.map((l,i)=>`
+    <div class="img-card" onclick="location.href='${l.href}'">
+      <img class="img-card-img" src="${pimg(IMG.learn,i)}" alt="${l.title}" loading="lazy"/>
+      <div class="img-card-body">
+        <div class="img-card-cat">${l.cat}</div>
+        <div class="img-card-title">${l.title}</div>
+        <div class="img-card-desc">${l.desc}</div>
+      </div>
+      <div class="img-card-foot">
+        <button class="btn btn-primary btn-sm"><span class="material-icons">play_circle</span>Learn Now</button>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();">Details</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderHomeTech() {
+  const el = document.getElementById('homeTech'); if(!el) return;
+  el.innerHTML = TECH_DATA.map((t,i)=>`
+    <div class="img-card" onclick="location.href='${t.href}'">
+      <img class="img-card-img" src="${pimg(IMG.tech,i)}" alt="${t.title}" loading="lazy"/>
+      <div class="img-card-body">
+        <div class="img-card-cat">${t.cat}</div>
+        <div class="img-card-title">${t.title}</div>
+        <div class="img-card-desc">${t.desc}</div>
+      </div>
+      <div class="img-card-foot">
+        <button class="btn btn-accent btn-sm"><span class="material-icons">shopping_bag</span>Buy</button>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();">Details</button>
+      </div>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>

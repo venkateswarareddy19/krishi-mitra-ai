@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Check Prices — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="price">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar"><span class="material-icons">trending_up</span><h2>Market Prices</h2><div class="kb-pgbar-right"><span class="badge bdg-live"><span class="material-icons">circle</span>Live</span></div></div>
+
+  <div style="display:flex;align-items:center;gap:9px;background:var(--primary-light);border:1px solid #C8E6C9;border-radius:var(--r-sm);padding:10px 14px;margin-bottom:14px;">
+    <span class="material-icons" style="font-size:17px;color:var(--primary);">storefront</span>
+    <span style="font-family:'Poppins',sans-serif;font-size:12.5px;font-weight:600;color:var(--primary-dark);flex:1;" id="priceMandiName">Pune APMC Mandi</span>
+    <button class="btn btn-ghost btn-xs" onclick="openLocPanel()"><span class="material-icons">edit_location</span>Change</button>
+  </div>
+
+  <!-- Stat Cards -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;" id="priceStatCards"></div>
+
+  <!-- Chart -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-head">
+      <div class="card-head-title"><span class="material-icons">show_chart</span>7-Day Price Trend</div>
+      <select class="form-select" id="chartCrop" style="padding:6px 10px;font-size:12px;width:130px;" onchange="updateChart()">
+        <option value="0">Tomato</option><option value="1">Onion</option>
+        <option value="2">Soybean</option><option value="3">Cotton</option><option value="4">Wheat</option>
+      </select>
+    </div>
+    <div style="padding:6px 14px 0;display:flex;gap:14px;">
+      <span style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px;"><span style="width:16px;height:3px;background:#2E7D32;border-radius:2px;display:inline-block;"></span>This Week</span>
+      <span style="font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:5px;"><span style="width:16px;height:3px;background:#B0BEC5;border-radius:2px;display:inline-block;"></span>Last Week</span>
+    </div>
+    <div style="padding:8px 10px 8px;"><canvas id="priceChart" height="165"></canvas></div>
+  </div>
+
+  <!-- AI Advisory -->
+  <div class="ai-card" style="margin-bottom:16px;">
+    <div class="ai-icon"><span class="material-icons">smart_toy</span></div>
+    <div><div class="ai-tag">AI Price Advisory</div><div class="ai-text" id="priceAIAdv">Loading...</div><div class="ai-sub">Based on supply forecast and regional demand trends in your location</div></div>
+  </div>
+
+  <!-- Distance Profit Calculator -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-head"><div class="card-head-title"><span class="material-icons">calculate</span>Distance Profit Calculator</div></div>
+    <div class="card-body">
+      <div class="form-2col">
+        <div class="form-group"><label class="form-label">Quantity (kg)</label><input class="form-input" type="number" id="calcQty" value="100" min="1" oninput="calcProfit()"/></div>
+        <div class="form-group"><label class="form-label">Transport Cost (Rs.)</label><input class="form-input" type="number" id="calcTransport" value="200" min="0" oninput="calcProfit()"/></div>
+      </div>
+      <div style="background:var(--primary-light);border:1px solid #C8E6C9;border-radius:var(--r-sm);padding:13px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
+        <div><div style="font-size:10px;color:var(--text-muted);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Gross Revenue</div><div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:16px;color:var(--primary);" id="calcGross">Rs.2,200</div></div>
+        <div><div style="font-size:10px;color:var(--text-muted);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Transport</div><div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:16px;color:var(--danger);" id="calcTrans">Rs.200</div></div>
+        <div><div style="font-size:10px;color:var(--text-muted);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;">Net Profit</div><div style="font-family:'Poppins',sans-serif;font-weight:800;font-size:16px;color:var(--primary);" id="calcNet">Rs.2,000</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full Table -->
+  <div class="card">
+    <div class="card-head"><div class="card-head-title"><span class="material-icons">table_chart</span>Today's Mandi Prices</div><span style="font-size:11px;color:var(--text-muted);">Updated: 6:00 AM</span></div>
+    <div class="price-tbl-wrap">
+      <table class="price-tbl"><thead><tr><th>Crop</th><th>Today (Rs./q)</th><th>Last Week</th><th>Change</th><th>MSP</th></tr></thead>
+      <tbody id="priceTblBody"></tbody></table>
+    </div>
+  </div>
+</div>
+</main>
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const CD={0:{n:'Tomato',tw:[1100,1150,1200,1280,1310,1380,1420],lw:[1050,1100,1140,1160,1180,1200,1310],adv:'Sell now — prices up 8.4%. Trend suggests peak within 2-3 days before supply increases.'},1:{n:'Onion',tw:[1020,1010,1000,990,995,982,980],lw:[1050,1060,1040,1030,1020,1010,995],adv:'Hold if possible — prices may recover in 7-10 days as festival demand picks up.'},2:{n:'Soybean',tw:[4400,4430,4470,4510,4530,4580,4600],lw:[4300,4320,4360,4400,4420,4460,4510],adv:'Good opportunity to sell — market is 7% above MSP. Prices may stabilize next week.'},3:{n:'Cotton',tw:[6700,6720,6750,6790,6820,6810,6800],lw:[6620,6650,6680,6700,6710,6720,6820],adv:'Prices stable near MSP. Wait for export demand in 2-3 weeks before selling large stock.'},4:{n:'Wheat',tw:[2080,2090,2100,2110,2120,2140,2150],lw:[2040,2050,2060,2080,2090,2100,2110],adv:'Sell now — MSP procurement season ending. Prices may drop after new crop harvest.'}};
+window.initPage_price=function(){window.onLocationChange=function(loc){updatePriceData(loc.state);};if(KB.location)updatePriceData(KB.location.state);else updatePriceData('Maharashtra');updateChart();};
+function updatePriceData(state){const pd=LOC_PRICES[state]||LOC_PRICES['Maharashtra'];setTxt('priceMandiName',pd.mandi);renderPriceStats(pd.rows);renderPriceTable(pd.rows);const idx=parseInt(document.getElementById('chartCrop').value)||0;setTxt('priceAIAdv',CD[idx]?.adv||pd.advice);}
+function renderPriceStats(rows){const el=document.getElementById('priceStatCards');if(!el||!rows)return;const hi=rows.reduce((a,b)=>a.today>b.today?a:b,rows[0]);const ri=rows.filter(r=>r.ch>0).reduce((a,b)=>a.ch>b.ch?a:b,rows.find(r=>r.ch>0)||rows[0]);el.innerHTML=`<div class="stat-card"><div class="stat-lbl">Highest Today</div><div class="stat-val">Rs.${fmt(hi.today)}</div><div class="stat-unit">${hi.crop}/q</div></div><div class="stat-card"><div class="stat-lbl">Best Rise</div><div class="stat-val" style="color:var(--primary);">+${ri.ch}%</div><div class="stat-unit">${ri.crop}</div></div><div class="stat-card"><div class="stat-lbl">Crops Tracked</div><div class="stat-val">${rows.length}</div><div class="stat-unit">Today</div></div>`;}
+function renderPriceTable(rows){const el=document.getElementById('priceTblBody');if(!el||!rows)return;el.innerHTML=rows.map(r=>`<tr><td>${r.crop}</td><td style="font-family:'Poppins',sans-serif;font-weight:700;">Rs.${fmt(r.today)}</td><td style="color:var(--text-muted);">Rs.${fmt(r.lw||r.lastWeek||0)}</td><td><div class="${r.ch>0?'td-up':'td-dn'}"><span class="material-icons">${r.ch>0?'arrow_drop_up':'arrow_drop_down'}</span>${r.ch>0?'+':''}${r.ch}%</div></td><td style="color:var(--text-muted);">${r.msp?'Rs.'+fmt(r.msp):'—'}</td></tr>`).join('');}
+function updateChart(){const canvas=document.getElementById('priceChart');if(!canvas)return;const idx=parseInt(document.getElementById('chartCrop').value)||0;const d=CD[idx];setTxt('priceAIAdv',d.adv);drawPriceChart(canvas,d.tw,d.lw);}
+function calcProfit(){const qty=parseFloat(document.getElementById('calcQty').value)||0;const trans=parseFloat(document.getElementById('calcTransport').value)||0;const idx=parseInt(document.getElementById('chartCrop').value)||0;const pricePerQ=CD[idx].tw[6];const gross=(qty/100)*pricePerQ;const net=gross-trans;setTxt('calcGross','Rs.'+fmt(Math.round(gross)));setTxt('calcTrans','Rs.'+fmt(trans));setTxt('calcNet','Rs.'+fmt(Math.round(net)));}
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(updateChart,200);});
+</script>
+</body>
+</html>

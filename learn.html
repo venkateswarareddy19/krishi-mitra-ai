@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Learning Hub — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="learn">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar">
+    <span class="material-icons">school</span><h2>Organic Farming &amp; Learning Hub</h2>
+    <div class="kb-pgbar-right"><span class="badge bdg-green">Free Access</span></div>
+  </div>
+
+  <div class="info-box ib-green"><span class="material-icons">school</span><p>Free farming guides, expert video tutorials, and practical tips to help you grow better crops and earn more from your farm. All content is in multiple languages.</p></div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <span class="material-icons">search</span>
+    <input type="text" id="learnSearch" placeholder="Search topics, crops, techniques, finance..." oninput="filterLearn()"/>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-row" id="learnFilter">
+    <div class="f-chip active" onclick="setLearnCat('all',this)"><span class="material-icons">apps</span>All</div>
+    <div class="f-chip" onclick="setLearnCat('organic',this)"><span class="material-icons">eco</span>Organic Farming</div>
+    <div class="f-chip" onclick="setLearnCat('pest',this)"><span class="material-icons">pest_control</span>Pest Control</div>
+    <div class="f-chip" onclick="setLearnCat('soil',this)"><span class="material-icons">landscape</span>Soil Health</div>
+    <div class="f-chip" onclick="setLearnCat('fertilizer',this)"><span class="material-icons">science</span>Fertilizers</div>
+    <div class="f-chip" onclick="setLearnCat('finance',this)"><span class="material-icons">attach_money</span>Finance</div>
+    <div class="f-chip" onclick="setLearnCat('modern',this)"><span class="material-icons">precision_manufacturing</span>Modern Farming</div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="learnCount"></div>
+  <div class="kb-grid" id="learnGrid"></div>
+</div>
+</main>
+
+<!-- Learn Detail Modal -->
+<div class="modal-overlay" id="learnModal" onclick="closeModalOnOverlay(event,'learnModal')">
+  <div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title" id="lModalTitle">Article Details</div><button class="modal-close" onclick="closeModal('learnModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body" id="lModalBody"></div>
+  </div>
+</div>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const LEARN_DATA = [
+  {id:1, cat:'organic',    catL:'Organic Farming',    type:'video',  dur:'15 min', title:'Vermicompost at Home in 30 Days',                img:0, desc:'Learn to convert farm waste into premium organic manure at zero cost. Step-by-step setup guide for a 1-square-metre vermicompost unit.', detail:'Vermicompost is one of the richest organic fertilisers available. This video covers: selecting the right worms, building the unit, ideal moisture and temperature, and harvesting the final product. Expected: 50 kg vermicompost per month from 1 sq.m unit.'},
+  {id:2, cat:'pest',       catL:'Pest Control',       type:'video',  dur:'12 min', title:'Neem-Garlic Spray — Complete Natural Pest Control',img:1, desc:'Prepare a powerful natural pesticide using kitchen ingredients. Effective against aphids, whitefly, thrips and mites.',              detail:'This proven organic recipe uses 100g garlic + 100g green chilli + 1 litre water blended, filtered and diluted to 10 litres. Add 5ml neem oil for enhanced effectiveness. Spray every 7 days in evening. Zero chemical residue — safe for organic certification.'},
+  {id:3, cat:'soil',       catL:'Soil Health',        type:'article',dur:'8 min',  title:'Soil Testing — Why, When and How to Do It',        img:2, desc:'Understanding your soil NPK and pH levels is the foundation of profitable farming. Get free soil testing from Krishi Kendra.',       detail:'Soil testing reveals exact nutrient deficiencies so you spend only on what is needed. Test once every 3 years minimum. Collect 10-15 samples from different spots, 15 cm deep. Mix well and send 500g to nearest Soil Testing Laboratory. Free under Soil Health Card Scheme.'},
+  {id:4, cat:'finance',    catL:'Finance',            type:'article',dur:'5 min',  title:'PM-KISAN Registration — Step by Step Guide',       img:3, desc:'Complete guide to register for PM-KISAN and receive Rs.6,000/year in your bank account. Documents needed and process explained.',    detail:'Step 1: Visit pmkisan.gov.in or nearest Common Service Centre. Step 2: Carry Aadhaar card, bank passbook, and land records. Step 3: Fill Form PM-KISAN-1. Step 4: Verify via OTP on Aadhaar-linked mobile. Amount credited directly to bank within 30 days.'},
+  {id:5, cat:'organic',    catL:'Organic Farming',    type:'article',dur:'7 min',  title:'Jeevamrut — The Ultimate Liquid Organic Fertiliser', img:4, desc:'Prepare this powerful bio-stimulant using cow dung and urine. Improves soil microbial activity and crop yield by 15-20%.',          detail:'Recipe: 200 litre water drum + 10 kg fresh cow dung + 10 litre cow urine + 2 kg jaggery + 2 kg gram flour + soil from tree base. Stir daily for 7 days. Dilute 1:10 and apply 200 litre per acre. Results visible within 15 days.'},
+  {id:6, cat:'pest',       catL:'Pest Control',       type:'video',  dur:'10 min', title:'Identifying and Treating Cotton Bollworm',          img:5, desc:'Cotton bollworm causes 40-70% yield losses if undetected. Learn identification signs and both chemical and biological controls.',    detail:'Signs: Pin holes in squares/bolls, reddish larvae inside bolls, presence of frass. Early detection is critical. Install 5 pheromone traps per acre from 30 days after sowing. Spray Chlorpyrifos 20% EC at 2ml/litre at first ETL. Release Trichogramma @ 1.5 lakh/acre.'},
+  {id:7, cat:'modern',     catL:'Modern Farming',     type:'video',  dur:'14 min', title:'Drip Irrigation Setup — Complete Guide',             img:0, desc:'Install drip irrigation system yourself. Reduces water use by 60%, increases yield 20-30%. 55% subsidy available under PM Sinchai.',  detail:'Components needed: mainline pipe, sub-main, laterals, drippers, filter, pressure gauge. For 1 acre: 400 metres lateral pipe + 160 drippers for 60 cm spacing. Flow rate 2-4 litres/hour per dripper. Total cost: Rs.18,000-22,000 per acre before 55% subsidy.'},
+  {id:8, cat:'finance',    catL:'Finance',            type:'video',  dur:'9 min',  title:'Crop Insurance — How to File a Claim',              img:1, desc:'Step-by-step process to file crop insurance claim under PM Fasal Bima Yojana and receive compensation within 30 days.',             detail:'If crop damaged: Step 1 — Notify bank/insurance company within 72 hours. Step 2 — Take photographs with date and GPS location. Step 3 — Submit crop cutting experiment request. Step 4 — Wait for surveyor visit. Compensation credited directly to account within 30-45 days.'},
+  {id:9, cat:'soil',       catL:'Soil Health',        type:'article',dur:'6 min',  title:'Black Cotton Soil — Best Crops and Management',     img:2, desc:'Black cotton soil has excellent water retention but can be challenging. This guide covers ideal crops and management techniques.',    detail:'Black cotton soil (Vertisols) holds moisture for 60-90 days. Ideal crops: Cotton, Soybean, Wheat, Chickpea. Avoid: Rice (waterlogging risk). Key management: Deep ploughing in summer, green manuring, balanced NPK. Avoid tilling when wet. Add 5 tonnes FYM per acre annually.'},
+  {id:10,cat:'organic',    catL:'Organic Farming',    type:'video',  dur:'11 min', title:'Green Manuring to Improve Soil Fertility',          img:3, desc:'Use green manure crops like Dhaincha and Sunnhemp to fix nitrogen and improve soil organic matter at minimal cost.',               detail:'Top green manure crops: Dhaincha (Sesbania), Sunnhemp, Cowpea, Cluster bean. Sow 20-25 kg seeds per acre. Allow to grow 40-45 days then incorporate by ploughing. Adds 50-80 kg nitrogen equivalent per acre. Saves Rs.2,500-3,000 in fertiliser cost.'},
+  {id:11,cat:'modern',     catL:'Modern Farming',     type:'article',dur:'6 min',  title:'Intercropping — Double Income from Same Land',      img:4, desc:'Strategic crop combinations to maximise land use efficiency. Proven intercropping systems that increase income by 30-50%.',        detail:'Proven systems: Soybean + Sorghum (2:1 ratio), Groundnut + Bajra, Cotton + Cowpea. Benefits: Better land use, pest management through diversity, income security if one crop fails. Rule: Main crop gets 70% of recommended inputs. Intercrop uses residual nutrients.'},
+  {id:12,cat:'finance',    catL:'Finance',            type:'article',dur:'4 min',  title:'Kisan Credit Card — Eligibility and Application',   img:5, desc:'Get up to Rs.3 lakh crop loan at just 4% annual interest. Complete guide to KCC eligibility, application process and repayment.',  detail:'Eligibility: All farmers including tenant farmers and sharecroppers. Documents: Aadhaar, land records, 2 photos, bank account. Apply at any nationalised bank or cooperative society. Credit limit based on crop budget. Repayment aligned with crop harvest cycle.'},
+];
+
+let learnCat = 'all';
+window.initPage_learn = function() { renderLearn(LEARN_DATA); };
+
+function setLearnCat(cat, el) {
+  learnCat = cat;
+  document.querySelectorAll('#learnFilter .f-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  filterLearn();
+}
+function filterLearn() {
+  const q = (document.getElementById('learnSearch')?.value || '').toLowerCase();
+  const list = LEARN_DATA.filter(l =>
+    (learnCat === 'all' || l.cat === learnCat) &&
+    (!q || l.title.toLowerCase().includes(q) || l.catL.toLowerCase().includes(q) || l.desc.toLowerCase().includes(q))
+  );
+  renderLearn(list);
+}
+function renderLearn(list) {
+  const el = document.getElementById('learnGrid');
+  const cnt = document.getElementById('learnCount');
+  if (!el) return;
+  if (cnt) cnt.textContent = list.length + ' resource' + (list.length !== 1 ? 's' : '') + ' found';
+  if (!list.length) { el.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><span class="material-icons">school</span><h4>No content found</h4><p>Try different search terms or category</p></div>`; return; }
+  el.innerHTML = list.map((l, i) => `
+    <div class="img-card" onclick="openLearnDetail(${l.id})">
+      <div style="position:relative;">
+        <img class="img-card-img" src="${pimg(IMG.learn, i)}" alt="${l.title}" loading="lazy" onerror="this.style.background='var(--primary-light)'"/>
+        <div style="position:absolute;top:8px;left:8px;">
+          <span class="badge bdg-white" style="background:rgba(0,0,0,0.55);color:#fff;font-size:9px;">
+            <span class="material-icons" style="font-size:10px;">${l.type==='video'?'play_circle':'menu_book'}</span>${l.type==='video'?'Video':'Article'} &middot; ${l.dur}
+          </span>
+        </div>
+      </div>
+      <div class="img-card-body">
+        <div class="img-card-cat">${l.catL}</div>
+        <div class="img-card-title">${l.title}</div>
+        <div class="img-card-desc">${l.desc}</div>
+      </div>
+      <div class="img-card-foot">
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();learnNow(${l.id})"><span class="material-icons">${l.type==='video'?'play_circle':'menu_book'}</span>Learn Now</button>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openLearnDetail(${l.id})"><span class="material-icons">info</span>Details</button>
+      </div>
+    </div>`).join('');
+}
+
+function openLearnDetail(id) {
+  const l = LEARN_DATA.find(x => x.id === id); if (!l) return;
+  setTxt('lModalTitle', l.title);
+  document.getElementById('lModalBody').innerHTML = `
+    <div class="info-box ib-blue"><span class="material-icons">${l.type==='video'?'videocam':'menu_book'}</span><p>${l.catL} &middot; ${l.type === 'video' ? 'Video' : 'Article'} &middot; ${l.dur} read/watch time</p></div>
+    <div style="font-size:13.5px;color:var(--text-mid);line-height:1.7;margin-bottom:16px;">${l.detail}</div>
+    <div class="divider"></div>
+    <button class="btn btn-primary btn-full btn-lg" onclick="learnNow(${l.id})"><span class="material-icons">${l.type==='video'?'play_circle':'menu_book'}</span>${l.type === 'video' ? 'Watch Video' : 'Read Full Article'}</button>`;
+  openModal('learnModal');
+}
+function learnNow(id) { const l = LEARN_DATA.find(x=>x.id===id); toast('Opening: ' + (l?.title || 'content') + ' — coming soon','info'); }
+</script>
+</body>
+</html>

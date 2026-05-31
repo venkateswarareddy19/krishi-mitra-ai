@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Govt Schemes — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="govt">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar">
+    <span class="material-icons">account_balance</span><h2>Government Schemes</h2>
+    <div class="kb-pgbar-right"><span class="badge bdg-green"><span class="material-icons">verified</span>Official</span></div>
+  </div>
+
+  <div class="govt-strip"><div class="tricolor"></div><div class="govt-strip-txt"><strong>Ministry of Agriculture &amp; Farmers Welfare — Govt. of India</strong><span>All schemes are official, verified and regularly updated. Last updated: April 2025</span></div></div>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <span class="material-icons">search</span>
+    <input type="text" id="schemeSearch" placeholder="Search scheme name, benefit, eligibility..." oninput="filterSchemes()"/>
+  </div>
+
+  <!-- Filters -->
+  <div style="display:flex;gap:9px;margin-bottom:14px;">
+    <select class="form-select" id="schState" style="flex:1;" onchange="filterSchemes()">
+      <option value="all">All States</option>
+      <option value="central">Central Govt Only</option>
+      <option value="maharashtra">Maharashtra</option>
+      <option value="ap">Andhra Pradesh</option>
+      <option value="telangana">Telangana</option>
+      <option value="up">Uttar Pradesh</option>
+      <option value="karnataka">Karnataka</option>
+    </select>
+    <select class="form-select" id="schCat" style="width:140px;" onchange="filterSchemes()">
+      <option value="all">All Categories</option>
+      <option value="income">Income Support</option>
+      <option value="insurance">Insurance</option>
+      <option value="loan">Loan / Credit</option>
+      <option value="subsidy">Subsidy</option>
+      <option value="equipment">Equipment</option>
+    </select>
+  </div>
+
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="schCount">Loading schemes...</div>
+  <div class="kb-grid" id="schemesGrid"></div>
+</div>
+</main>
+
+<!-- Scheme Detail Modal -->
+<div class="modal-overlay" id="schModal" onclick="closeModalOnOverlay(event,'schModal')">
+  <div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title" id="schModalTitle">Scheme Details</div><button class="modal-close" onclick="closeModal('schModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body" id="schModalBody"></div>
+  </div>
+</div>
+
+<!-- Documents Modal -->
+<div class="modal-overlay" id="docsModal" onclick="closeModalOnOverlay(event,'docsModal')">
+  <div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title" id="docsModalTitle">Required Documents</div><button class="modal-close" onclick="closeModal('docsModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body" id="docsModalBody"></div>
+  </div>
+</div>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const SCHEMES = [
+  {id:1,name:'PM-KISAN Samman Nidhi',govt:'Central Govt',cat:'income',state:'central',img:0,
+   desc:'Rs.6,000/year in 3 equal instalments — direct bank transfer to all farmer families with cultivable land.',
+   benefits:['Rs.2,000 every 4 months to bank account','No intermediary — 100% direct benefit transfer','Covers all land-holding farmer families'],
+   elig:'All farmers with cultivable land. Excludes income tax payers and government employees.',
+   deadline:'Ongoing',link:'https://pmkisan.gov.in',
+   docs:['Aadhaar Card (mandatory)','Bank Account Passbook / Cancelled cheque','Land records (Satbara / Khasra Khatauni)','Mobile number linked to Aadhaar','Farmer self-declaration form']},
+  {id:2,name:'PM Fasal Bima Yojana',govt:'Central Govt',cat:'insurance',state:'central',img:1,
+   desc:'Comprehensive crop insurance at 2% premium for Kharif, 1.5% for Rabi — covers all natural calamities.',
+   benefits:['Minimal premium — 2% Kharif, 1.5% Rabi','Covers drought, flood, hailstorm, pests','Fast claim settlement via satellite survey'],
+   elig:'All farmers growing notified crops. Loanee farmers enrolled compulsorily.',
+   deadline:'31 Jul 2025',link:'https://pmfby.gov.in',
+   docs:['Aadhaar Card','Bank account details','Land records / Sowing certificate','Mobile number','Crop sowing declaration']},
+  {id:3,name:'Kisan Credit Card (KCC)',govt:'Central Govt',cat:'loan',state:'central',img:2,
+   desc:'Flexible credit up to Rs.3 lakh for agriculture at subsidised 4% interest per annum.',
+   benefits:['Credit up to Rs.3 lakh at 4% interest','3% extra subvention for timely repayment','Covers crop, post-harvest and allied activities'],
+   elig:'All farmers, tenant farmers, oral lessees, sharecroppers and SHGs.',
+   deadline:'Ongoing',link:'https://agricoop.nic.in',
+   docs:['Aadhaar Card','PAN Card or Voter ID','Bank account with passbook','Land ownership documents','Two passport-size photos','KCC application form']},
+  {id:4,name:'PM Krishi Sinchai Yojana',govt:'Central Govt',cat:'equipment',state:'central',img:3,
+   desc:'"More Crop Per Drop" — 55% subsidy on drip and sprinkler irrigation systems for all farmers.',
+   benefits:['55% subsidy on drip/sprinkler systems','Extra 10% for SC/ST farmers','Pipes, emitters, filters all covered'],
+   elig:'All farmers. Priority to small/marginal farmers below 5 acres.',
+   deadline:'31 Mar 2026',link:'https://pmksy.gov.in',
+   docs:['Aadhaar Card','Land documents (7/12 extract)','Bank account passbook','Application form from agriculture dept','Quotation from certified vendor']},
+  {id:5,name:'PM-KUSUM Solar Pump',govt:'Central Govt',cat:'equipment',state:'central',img:4,
+   desc:'90% subsidised solar pump for irrigation — pay only 10% of cost. Zero electricity bill forever.',
+   benefits:['Pay only 10% of pump cost','Government pays 60%, Bank loan for remaining 30%','Free electricity for irrigation lifetime'],
+   elig:'Farmers with own agricultural land. Maximum 7.5 HP pump per application.',
+   deadline:'31 Dec 2025',link:'https://mnre.gov.in',
+   docs:['Aadhaar Card','Land ownership certificate','Bank account details','Mobile number','Application via agriculture department']},
+  {id:6,name:'Soil Health Card Scheme',govt:'Central Govt',cat:'subsidy',state:'central',img:5,
+   desc:'Free soil testing with customised crop-wise fertiliser recommendations for every farmer.',
+   benefits:['Completely free soil testing at government labs','Crop-specific NPK fertiliser recommendation','Increases yield by up to 15% with correct nutrients'],
+   elig:'All land-holding farmers — apply via local agriculture department.',
+   deadline:'Ongoing',link:'https://soilhealth.dac.gov.in',
+   docs:['Aadhaar Card','Land ownership document','Filled application form (free at Krishi Kendra)','Soil sample (collected by govt staff)']},
+  {id:7,name:'Maharashtra Shetkari Sahayata',govt:'Maharashtra Govt',cat:'subsidy',state:'maharashtra',img:0,
+   desc:'Financial relief for Maharashtra farmers affected by drought, flood or hailstorm damage.',
+   benefits:['Rs.10,000–Rs.25,000 per acre assistance','Covers all certified natural disaster losses','Disbursement within 30 working days'],
+   elig:'Maharashtra farmers with greater than 33% certified crop loss. Satbara extract required.',
+   deadline:'30 Sep 2025',link:'#',
+   docs:['Aadhaar Card','Satbara extract (7/12)','Bank passbook','Crop loss certificate from tahsildar','Mobile number']},
+  {id:8,name:'AP Rythu Bharosa',govt:'Andhra Pradesh Govt',cat:'income',state:'ap',img:1,
+   desc:'Rs.13,500/year direct income support to all farming families in Andhra Pradesh.',
+   benefits:['Rs.13,500/year per family','Covers tenant farmers also','Additional crop insurance support'],
+   elig:'All farmer families in Andhra Pradesh including tenant farmers.',
+   deadline:'Ongoing',link:'#',
+   docs:['Aadhaar Card','Ration card (white/pink)','Land records or tenancy agreement','Bank account linked to Aadhaar','Mobile number']},
+];
+
+const catBdg={income:'bdg-green',insurance:'bdg-blue',loan:'bdg-yellow',subsidy:'bdg-purple',equipment:'bdg-orange'};
+const catLbl={income:'Income Support',insurance:'Insurance',loan:'Loan / Credit',subsidy:'Subsidy',equipment:'Equipment'};
+
+window.initPage_govt = function() { filterSchemes(); };
+
+function filterSchemes() {
+  const state = document.getElementById('schState').value;
+  const cat   = document.getElementById('schCat').value;
+  const q     = document.getElementById('schemeSearch').value.toLowerCase();
+  const list  = SCHEMES.filter(s =>
+    (state==='all'||s.state===state) &&
+    (cat==='all'||s.cat===cat) &&
+    (!q || s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.benefits.join(' ').toLowerCase().includes(q))
+  );
+  setTxt('schCount', list.length+' scheme'+(list.length!==1?'s':'')+' found');
+  renderSchemes(list);
+}
+
+function renderSchemes(list) {
+  const el = document.getElementById('schemesGrid'); if(!el) return;
+  if(!list.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><span class="material-icons">account_balance</span><h4>No schemes found</h4><p>Try different filters or search terms</p></div>`;return;}
+  el.innerHTML = list.map(s=>`
+    <div class="scheme-card" onclick="openSchemeDetail(${s.id})">
+      <img class="scheme-card-img" src="${pimg(IMG.schemes,s.img)}" alt="${s.name}" loading="lazy" onerror="this.style.background='var(--primary-light)'"/>
+      <div class="scheme-card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <div class="scheme-badge">${s.govt}</div>
+          <span class="badge ${catBdg[s.cat]||'bdg-gray'}" style="font-size:9.5px;">${catLbl[s.cat]||s.cat}</span>
+        </div>
+        <div class="scheme-name">${s.name}</div>
+        <div class="scheme-desc">${s.desc}</div>
+      </div>
+      <div class="scheme-foot">
+        <span class="scheme-dl"><span class="material-icons">event</span>${s.deadline}</span>
+        <div style="display:flex;gap:5px;">
+          <button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();openDocs(${s.id})"><span class="material-icons">description</span>Docs</button>
+          <button class="btn btn-accent btn-xs" onclick="event.stopPropagation();applyScheme('${s.name}','${s.link}')"><span class="material-icons">open_in_new</span>Apply</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openSchemeDetail(id) {
+  const s=SCHEMES.find(x=>x.id===id);if(!s)return;
+  setTxt('schModalTitle',s.name);
+  document.getElementById('schModalBody').innerHTML=`
+    <div style="margin-bottom:14px;"><img src="${pimg(IMG.schemes,s.img)}" alt="${s.name}" style="width:100%;height:160px;object-fit:cover;border-radius:var(--r-sm);" loading="lazy"/></div>
+    <div class="info-box ib-blue"><span class="material-icons">info</span><p>${s.desc}</p></div>
+    <div class="s-label" style="margin-bottom:9px;">Key Benefits</div>
+    ${s.benefits.map(b=>`<div style="display:flex;align-items:center;gap:7px;font-size:13px;margin-bottom:8px;"><span class="material-icons" style="font-size:17px;color:#2E7D32;">check_circle</span>${b}</div>`).join('')}
+    <div class="divider"></div>
+    <div class="s-label" style="margin-bottom:7px;">Eligibility</div>
+    <p style="font-size:13px;color:var(--text-mid);line-height:1.65;margin-bottom:16px;">${s.elig}</p>
+    <div style="display:flex;gap:9px;margin-bottom:16px;">
+      <div style="flex:1;background:var(--accent-light);border:1px solid #FFE082;border-radius:var(--r-sm);padding:11px;text-align:center;"><div style="font-size:10px;color:#E65100;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px;">Deadline</div><div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;">${s.deadline}</div></div>
+      <div style="flex:1;background:var(--primary-light);border:1px solid #C8E6C9;border-radius:var(--r-sm);padding:11px;text-align:center;"><div style="font-size:10px;color:#2E7D32;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px;">Authority</div><div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;">${s.govt}</div></div>
+    </div>
+    <div style="display:flex;gap:9px;">
+      <button class="btn btn-ghost flex-1" onclick="closeModal('schModal');openDocs(${s.id})"><span class="material-icons">description</span>Required Documents</button>
+      <button class="btn btn-accent flex-1" onclick="applyScheme('${s.name}','${s.link}')"><span class="material-icons">open_in_new</span>Apply Now</button>
+    </div>`;
+  openModal('schModal');
+}
+
+function openDocs(id) {
+  const s=SCHEMES.find(x=>x.id===id);if(!s)return;
+  setTxt('docsModalTitle','Documents: '+s.name);
+  document.getElementById('docsModalBody').innerHTML=`
+    <div class="info-box ib-yellow"><span class="material-icons">warning</span><p>Keep all documents ready before applying. Documents must be originals + photocopies.</p></div>
+    <div class="s-label" style="margin-bottom:9px;">Required Documents Checklist</div>
+    ${(s.docs||['Aadhaar Card','Land documents','Bank passbook']).map((d,i)=>`
+      <div style="display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--border-light);">
+        <div style="width:28px;height:28px;border:2px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:.18s;" id="chk_${id}_${i}" onclick="toggleChk('chk_${id}_${i}')"></div>
+        <div style="font-size:13px;color:var(--text);font-weight:500;">${d}</div>
+      </div>`).join('')}
+    <div style="margin-top:16px;">
+      <button class="btn btn-primary btn-full" onclick="applyScheme('${s.name}','${s.link}')"><span class="material-icons">open_in_new</span>Proceed to Apply</button>
+    </div>`;
+  closeModal('schModal');
+  openModal('docsModal');
+}
+
+function toggleChk(id) {
+  const el=document.getElementById(id);if(!el)return;
+  const checked=el.dataset.checked==='1';
+  el.dataset.checked=checked?'0':'1';
+  el.style.background=checked?'':' var(--primary)';
+  el.style.borderColor=checked?'var(--border)':'var(--primary)';
+  el.innerHTML=checked?'':'<span class="material-icons" style="font-size:16px;color:#fff;">check</span>';
+}
+function applyScheme(name,link){toast('Opening application for: '+name,'success');if(link&&link!=='#')setTimeout(()=>window.open(link,'_blank'),700);}
+</script>
+</body>
+</html>

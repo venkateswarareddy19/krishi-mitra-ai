@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Login — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:20px;position:relative;overflow:hidden;
+  background:#1B5E20;
+  font-family:'Inter',sans-serif;
+}
+.login-bg{
+  position:fixed;inset:0;
+  background-image:url('https://images.unsplash.com/photo-1560493676-04071c5f467b?w=1400&q=85');
+  background-size:cover;background-position:center;
+  z-index:0;
+}
+.login-bg-overlay{
+  position:fixed;inset:0;
+  background:linear-gradient(160deg,rgba(15,40,15,.88) 0%,rgba(27,94,32,.80) 45%,rgba(15,50,15,.92) 100%);
+  z-index:1;
+}
+.login-wrap{position:relative;z-index:2;width:100%;max-width:460px;}
+
+/* Branding strip above card */
+.login-brand{text-align:center;margin-bottom:18px;}
+.login-brand-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:6px;}
+.login-brand-icon{width:44px;height:44px;background:var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;}
+.login-brand-icon .material-icons{font-size:24px;color:#1B5E20;}
+.login-brand-name{font-family:'Poppins',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.login-brand-tag{font-size:12px;color:rgba(255,255,255,.68);letter-spacing:.5px;}
+
+/* Card — glass morphism */
+.login-card{
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-radius:20px;
+  box-shadow:0 24px 80px rgba(0,0,0,0.45),0 8px 24px rgba(0,0,0,0.25);
+  border:1px solid rgba(255,255,255,.5);
+  overflow:hidden;
+}
+.login-card-header{
+  background:linear-gradient(135deg,#2E7D32,#1B5E20);
+  padding:22px 26px 18px;
+}
+.lch-step{font-size:10px;font-weight:700;font-family:'Poppins',sans-serif;color:rgba(255,255,255,.72);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.lch-title{font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:2px;}
+.lch-sub{font-size:12px;color:rgba(255,255,255,.75);}
+
+/* Progress bar */
+.login-progress{height:3px;background:rgba(255,255,255,.2);}
+.login-progress-fill{height:100%;background:var(--accent);border-radius:0;transition:width .4s ease;}
+
+.login-card-body{padding:26px 26px 22px;}
+
+/* Role selector cards */
+.role-selector{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+.role-card{
+  border:2px solid var(--border);border-radius:14px;padding:16px 12px;
+  text-align:center;cursor:pointer;transition:all .2s ease;
+  background:#fff;position:relative;overflow:hidden;
+}
+.role-card::before{content:'';position:absolute;inset:0;background:var(--primary-light);opacity:0;transition:opacity .2s;}
+.role-card.active{border-color:var(--primary);}
+.role-card.active::before{opacity:1;}
+.role-card-inner{position:relative;z-index:1;}
+.role-check{position:absolute;top:9px;right:9px;width:20px;height:20px;background:var(--primary);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.6);transition:all .2s;}
+.role-card.active .role-check{opacity:1;transform:scale(1);}
+.role-check .material-icons{font-size:13px;color:#fff;}
+.role-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;transition:background .2s;}
+.role-icon-wrap .material-icons{font-size:28px;transition:color .2s;}
+.role-card.active .role-icon-wrap{background:var(--primary);}
+.role-card.active .role-icon-wrap .material-icons{color:#fff;}
+.role-label{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.role-sub{font-size:10.5px;color:var(--text-muted);}
+
+/* Phone input */
+.phone-wrap{display:flex;align-items:center;gap:10px;}
+.phone-prefix{
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r-sm);padding:11px 13px;
+  font-family:'Poppins',sans-serif;font-size:13px;font-weight:600;color:var(--text);
+  flex-shrink:0;white-space:nowrap;
+}
+.phone-flag{width:20px;height:14px;object-fit:cover;border-radius:2px;background:#FF9933;}
+.phone-input{flex:1;}
+
+/* 6-box OTP */
+.otp-boxes{display:flex;gap:9px;margin-bottom:16px;}
+.otp-box{
+  flex:1;height:54px;
+  border:2px solid var(--border);border-radius:11px;
+  text-align:center;font-family:'Poppins',sans-serif;
+  font-size:24px;font-weight:800;color:var(--primary);
+  background:#FAFBFA;outline:none;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+  caret-color:var(--primary);
+}
+.otp-box:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(46,125,50,.12);}
+.otp-box.filled{border-color:var(--primary);background:var(--primary-light);}
+
+.demo-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--accent-light);border:1px solid #FFE082;
+  border-radius:var(--r-full);padding:5px 13px;
+  font-size:12px;font-weight:600;color:#E65100;margin-bottom:16px;
+}
+.demo-pill .material-icons{font-size:14px;}
+
+/* Skip link */
+.skip-wrap{text-align:center;margin-top:14px;}
+.skip-link{font-size:12px;color:var(--text-muted);}
+.skip-link span{color:var(--primary);font-weight:600;cursor:pointer;text-decoration:underline;}
+
+/* Security badge */
+.security-row{display:flex;align-items:center;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--border-light);}
+.security-row .material-icons{font-size:16px;color:var(--primary);}
+.security-row span{font-size:11px;color:var(--text-muted);}
+
+/* Steps */
+.login-step{display:none;}
+.login-step.active{display:block;}
+
+/* Resend */
+.resend-row{text-align:center;margin-top:10px;font-size:12px;color:var(--text-muted);}
+.resend-row span{color:var(--primary);font-weight:600;cursor:pointer;}
+
+/* Govt badge below card */
+.login-govt-strip{
+  background:rgba(0,0,0,.4);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  padding:10px 16px;margin-top:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.login-govt-strip .material-icons{font-size:18px;color:var(--accent);}
+.login-govt-strip span{font-size:11px;color:rgba(255,255,255,.78);}
+</style>
+</head>
+<body>
+<div class="login-bg"></div>
+<div class="login-bg-overlay"></div>
+<div id="toastBox"></div>
+
+<div class="login-wrap">
+  <!-- Brand strip -->
+  <div class="login-brand">
+    <div class="login-brand-logo">
+      <div class="login-brand-icon"><span class="material-icons">eco</span></div>
+      <div class="login-brand-name">KisanBazaar AI</div>
+    </div>
+    <div class="login-brand-tag">National Agriculture Digital Mission — Govt. of India</div>
+  </div>
+
+  <!-- Card -->
+  <div class="login-card">
+    <div class="login-card-header" id="lcHeader">
+      <div class="lch-step" id="lcStep">Step 1 of 2</div>
+      <div class="lch-title" id="lcTitle">Select Your Role</div>
+      <div class="lch-sub" id="lcSub">Choose how you want to use KisanBazaar AI</div>
+    </div>
+    <div class="login-progress"><div class="login-progress-fill" id="lcProgress" style="width:50%;"></div></div>
+
+    <div class="login-card-body">
+
+      <!-- Step 1 -->
+      <div class="login-step active" id="step1">
+        <!-- Role Selector -->
+        <div class="role-selector" style="margin-bottom:20px;">
+          <div class="role-card active" id="roleFarmer" onclick="selectRole('farmer')">
+            <div class="role-check"><span class="material-icons">check</span></div>
+            <div class="role-card-inner">
+              <div class="role-icon-wrap" style="background:var(--primary-light);"><span class="material-icons" style="color:var(--primary);">agriculture</span></div>
+              <div class="role-label">Farmer</div>
+              <div class="role-sub">Grow &amp; Sell crops</div>
+            </div>
+          </div>
+          <div class="role-card" id="roleCustomer" onclick="selectRole('customer')">
+            <div class="role-check"><span class="material-icons">check</span></div>
+            <div class="role-card-inner">
+              <div class="role-icon-wrap" style="background:#E3F2FD;"><span class="material-icons" style="color:#1565C0;">shopping_cart</span></div>
+              <div class="role-label">Customer</div>
+              <div class="role-sub">Buy fresh produce</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mobile Number <span class="form-req">*</span></label>
+          <div class="phone-wrap">
+            <div class="phone-prefix">
+              <div class="phone-flag" style="background:linear-gradient(180deg,#FF9933 33%,#fff 33% 66%,#138808 66%);"></div>
+              +91
+            </div>
+            <input class="form-input phone-input" type="tel" id="phoneInput" maxlength="10" placeholder="10-digit mobile number" inputmode="numeric"/>
+          </div>
+          <div class="form-hint">India (+91) — Free of charge — No spam</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Preferred Language</label>
+          <select class="form-select" id="langPref">
+            <option value="en">English</option>
+            <option value="te">Telugu (తెలుగు)</option>
+            <option value="hi">Hindi (हिंदी)</option>
+            <option value="mr">Marathi (मराठी)</option>
+            <option value="kn">Kannada (ಕನ್ನಡ)</option>
+            <option value="ta">Tamil (தமிழ்)</option>
+            <option value="gu">Gujarati (ગુજરાતી)</option>
+            <option value="pa">Punjabi (ਪੰਜਾਬੀ)</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="sendOTP()" style="font-size:14px;">
+          <span class="material-icons">send</span>Send OTP
+        </button>
+        <div class="skip-wrap">
+          <span class="skip-link">Exploring the platform? <span onclick="skipLogin()">Skip login for now</span></span>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="login-step" id="step2">
+        <div class="demo-pill"><span class="material-icons">info</span>Demo OTP is <strong>1 2 3 4 5 6</strong></div>
+        <div class="otp-boxes" id="otpBoxes">
+          <input class="otp-box" id="ob0" type="text" maxlength="1" inputmode="numeric" oninput="otpIn(this,0)" onkeydown="otpKey(event,this,0)"/>
+          <input class="otp-box" id="ob1" type="text" maxlength="1" inputmode="numeric" oninput="otpIn(this,1)" onkeydown="otpKey(event,this,1)"/>
+          <input class="otp-box" id="ob2" type="text" maxlength="1" inputmode="numeric" oninput="otpIn(this,2)" onkeydown="otpKey(event,this,2)"/>
+          <input class="otp-box" id="ob3" type="text" maxlength="1" inputmode="numeric" oninput="otpIn(this,3)" onkeydown="otpKey(event,this,3)"/>
+          <input class="otp-box" id="ob4" type="text" maxlength="1" inputmode="numeric" oninput="otpIn(this,4)" onkeydown="otpKey(event,this,4)"/>
+          <input class="otp-box" id="ob5" type="text" maxlength="1" inputmode="numeric" oninput="otpIn(this,5)" onkeydown="otpKey(event,this,5)"/>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" onclick="verifyOTP()" style="font-size:14px;">
+          <span class="material-icons">verified_user</span>Verify &amp; Login
+        </button>
+        <div class="resend-row">Didn't receive OTP? <span onclick="resendOTP()">Resend OTP</span></div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-ghost btn-sm" onclick="backToStep1()" style="width:100%;">
+            <span class="material-icons">arrow_back</span>Change Number
+          </button>
+        </div>
+      </div>
+
+      <div class="security-row">
+        <span class="material-icons">security</span>
+        <span>256-bit encrypted · Aadhaar-linked OTP · Govt. of India secured</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Govt badge -->
+  <div class="login-govt-strip">
+    <span class="material-icons">account_balance</span>
+    <span>Ministry of Agriculture &amp; Farmers Welfare · National Agriculture Digital Mission</span>
+  </div>
+</div>
+
+<script>
+let selectedRole = 'farmer';
+
+function selectRole(r) {
+  selectedRole = r;
+  document.getElementById('roleFarmer').classList.toggle('active', r==='farmer');
+  document.getElementById('roleCustomer').classList.toggle('active', r==='customer');
+}
+
+function sendOTP() {
+  const ph = document.getElementById('phoneInput').value.trim();
+  if (ph.length!==10 || !/^\d{10}$/.test(ph)) { showToast('Enter a valid 10-digit mobile number','error'); return; }
+  document.getElementById('lcStep').textContent  = 'Step 2 of 2';
+  document.getElementById('lcTitle').textContent = 'Verify OTP';
+  document.getElementById('lcSub').textContent   = 'OTP sent to +91 '+ph.slice(0,5)+'XXXXX';
+  document.getElementById('lcProgress').style.width = '100%';
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+  document.getElementById('ob0').focus();
+  showToast('OTP sent! (Demo: 1 2 3 4 5 6)','info');
+}
+
+function otpIn(el, idx) {
+  el.classList.toggle('filled', el.value.length>0);
+  if (el.value.length===1 && idx<5) document.getElementById('ob'+(idx+1)).focus();
+  if (idx===5 && el.value.length===1) checkAutoVerify();
+}
+function otpKey(e, el, idx) {
+  if (e.key==='Backspace'&&!el.value&&idx>0) { const p=document.getElementById('ob'+(idx-1)); p.value=''; p.classList.remove('filled'); p.focus(); }
+}
+function checkAutoVerify() {
+  const otp = [0,1,2,3,4,5].map(i=>document.getElementById('ob'+i).value).join('');
+  if (otp.length===6) verifyOTP();
+}
+function verifyOTP() {
+  const otp = [0,1,2,3,4,5].map(i=>document.getElementById('ob'+i).value).join('');
+  if (otp==='123456') {
+    const ph   = document.getElementById('phoneInput').value.trim();
+    const lang = document.getElementById('langPref').value;
+    const user = {name:'Ramesh Kumar',phone:'+91 '+ph,role:selectedRole,lang,id:'GUN001',seq:1};
+    localStorage.setItem('kb_user', JSON.stringify(user));
+    showToast('Login successful! Welcome to KisanBazaar AI','success');
+    setTimeout(()=>location.href = selectedRole==='customer' ? 'customer.html' : 'index.html', 900);
+  } else { showToast('Incorrect OTP. Demo OTP is 1 2 3 4 5 6','error'); }
+}
+function backToStep1() {
+  document.getElementById('step2').classList.remove('active');
+  document.getElementById('step1').classList.add('active');
+  document.getElementById('lcStep').textContent  = 'Step 1 of 2';
+  document.getElementById('lcTitle').textContent = 'Select Your Role';
+  document.getElementById('lcSub').textContent   = 'Choose how you want to use KisanBazaar AI';
+  document.getElementById('lcProgress').style.width = '50%';
+  [0,1,2,3,4,5].forEach(i=>{ const b=document.getElementById('ob'+i); b.value=''; b.classList.remove('filled'); });
+}
+function resendOTP() { showToast('OTP resent! (Demo: 1 2 3 4 5 6)','info'); }
+function skipLogin() { location.href='index.html'; }
+
+function showToast(msg, type='info') {
+  const box=document.getElementById('toastBox'); if(!box) return;
+  const m={success:{cls:'t-success',ic:'check_circle'},error:{cls:'t-error',ic:'error'},info:{cls:'t-info',ic:'info'}};
+  const t=m[type]||m.info;
+  const el=document.createElement('div'); el.className='toast '+t.cls;
+  el.innerHTML=`<span class="material-icons">${t.ic}</span>${msg}`;
+  box.appendChild(el);
+  setTimeout(()=>{el.style.opacity='0';setTimeout(()=>el.remove(),300);},3800);
+}
+</script>
+</body>
+</html>

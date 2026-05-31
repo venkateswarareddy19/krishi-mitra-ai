@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Profile — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>
+.fin-card{background:var(--card);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-xs);margin-bottom:14px;}
+.fin-bar{height:5px;width:100%;background:var(--border-light);}
+.fin-bar-fill{height:100%;background:linear-gradient(90deg,var(--primary),#66BB6A);border-radius:0;}
+.crop-hist-row{padding:11px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;}
+.crop-hist-row:last-child{border-bottom:none;}
+.chr-left{display:flex;align-items:center;gap:10px;}
+.chr-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.chr-name{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;}
+.chr-meta{font-size:11px;color:var(--text-muted);}
+.chr-yield{font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;color:var(--primary);}
+.lang-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:13px 16px;}
+.lang-btn{padding:8px;border-radius:var(--r-sm);border:1.5px solid var(--border);font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;cursor:pointer;background:var(--card);color:var(--text-muted);transition:all .18s;text-align:center;}
+.lang-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);box-shadow:var(--shadow-green);}
+</style>
+</head>
+<body data-page="profile">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar">
+    <span class="material-icons">account_circle</span><h2>My Profile</h2>
+    <div class="kb-pgbar-right"><button class="btn btn-outline btn-xs" onclick="openModal('editModal')"><span class="material-icons">edit</span>Edit Profile</button></div>
+  </div>
+
+  <!-- Profile Hero -->
+  <div class="profile-hero">
+    <div class="profile-av-wrap">
+      <div class="profile-av" id="profAvWrap">
+        <span class="material-icons">account_circle</span>
+      </div>
+      <div class="profile-edit-av" onclick="toast('Photo upload coming soon','info')">
+        <span class="material-icons">camera_alt</span>
+      </div>
+    </div>
+    <div style="flex:1;">
+      <div class="profile-name" id="profName">Ramesh Kumar</div>
+      <div class="profile-id" id="profKisanId">Kisan ID: Loading...</div>
+      <div style="font-size:11px;opacity:.76;margin-bottom:7px;" id="profPhone">+91 98765 43210</div>
+      <div class="profile-ver"><span class="material-icons">verified</span>PM-Kisan Verified &amp; Registered</div>
+    </div>
+  </div>
+
+  <!-- Kisan ID Card Visual -->
+  <div id="kisanIdCard" style="background:linear-gradient(135deg,var(--primary-dark),var(--primary));border-radius:var(--r-lg);padding:18px 20px;margin-bottom:16px;color:#fff;position:relative;overflow:hidden;">
+    <div style="position:absolute;right:-15px;top:-20px;width:90px;height:90px;background:rgba(255,255,255,.06);border-radius:50%;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="kb-logo-icon" style="width:30px;height:30px;"><span class="material-icons" style="font-size:17px;">eco</span></div>
+        <div style="font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;color:#fff;">KisanBazaar AI</div>
+      </div>
+      <div style="text-align:right;font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:1px;">Farmer Identity Card</div>
+    </div>
+    <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:900;letter-spacing:3px;color:var(--accent);margin-bottom:5px;" id="cardKisanId">—</div>
+    <div style="font-size:13px;opacity:.84;margin-bottom:12px;" id="cardName">Ramesh Kumar</div>
+    <div style="display:flex;justify-content:space-between;padding-top:11px;border-top:1px solid rgba(255,255,255,.18);">
+      <div><div style="font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px;">Location</div><div style="font-family:'Poppins',sans-serif;font-size:11.5px;font-weight:600;" id="cardLoc">—</div></div>
+      <div><div style="font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px;">Land Area</div><div style="font-family:'Poppins',sans-serif;font-size:11.5px;font-weight:600;">4.5 Acres</div></div>
+      <div style="text-align:right;"><div style="font-size:9px;opacity:.6;text-transform:uppercase;letter-spacing:.7px;margin-bottom:2px;">Valid Until</div><div style="font-family:'Poppins',sans-serif;font-size:11.5px;font-weight:600;">Mar 2026</div></div>
+    </div>
+  </div>
+
+  <!-- Personal Details -->
+  <div class="prof-sec">
+    <div class="prof-sec-head"><span class="material-icons">person</span>Personal Information<div class="prof-sec-head-right"><button class="btn btn-ghost btn-xs" onclick="openModal('editModal')"><span class="material-icons">edit</span>Edit</button></div></div>
+    <div class="prof-row"><span class="prof-row-key">Full Name</span><span class="prof-row-val" id="pr_fullname">Ramesh Shankar Kumar</span></div>
+    <div class="prof-row"><span class="prof-row-key">Mobile Number</span><span class="prof-row-val" id="pr_phone">+91 98765 43210</span></div>
+    <div class="prof-row"><span class="prof-row-key">Aadhaar Number</span><span class="prof-row-val">XXXX XXXX 4321</span></div>
+    <div class="prof-row"><span class="prof-row-key">Date of Birth</span><span class="prof-row-val">15 March 1982</span></div>
+    <div class="prof-row"><span class="prof-row-key">Gender</span><span class="prof-row-val">Male</span></div>
+    <div class="prof-row" style="border-bottom:none;"><span class="prof-row-key">Bank (IFSC)</span><span class="prof-row-val">SBI &middot; SBIN0012345</span></div>
+  </div>
+
+  <!-- Address -->
+  <div class="prof-sec">
+    <div class="prof-sec-head"><span class="material-icons">location_on</span>Address &amp; Location<div class="prof-sec-head-right"><button class="btn btn-ghost btn-xs" onclick="openLocPanel()"><span class="material-icons">edit_location</span>Change</button></div></div>
+    <div class="prof-row"><span class="prof-row-key">Village</span><span class="prof-row-val">Shirur</span></div>
+    <div class="prof-row"><span class="prof-row-key">Mandal / Block</span><span class="prof-row-val" id="pr_mandal">—</span></div>
+    <div class="prof-row"><span class="prof-row-key">District</span><span class="prof-row-val" id="pr_district">Pune</span></div>
+    <div class="prof-row"><span class="prof-row-key">State</span><span class="prof-row-val" id="pr_state">Maharashtra</span></div>
+    <div class="prof-row" style="border-bottom:none;"><span class="prof-row-key">PIN Code</span><span class="prof-row-val">412210</span></div>
+  </div>
+
+  <!-- Land Details -->
+  <div class="prof-sec">
+    <div class="prof-sec-head"><span class="material-icons">landscape</span>Land Details<div class="prof-sec-head-right"><button class="btn btn-ghost btn-xs" onclick="openModal('editModal')"><span class="material-icons">edit</span>Edit</button></div></div>
+    <div class="prof-row"><span class="prof-row-key">Total Land Area</span><span class="prof-row-val">4.5 Acres</span></div>
+    <div class="prof-row"><span class="prof-row-key">Soil Type</span><span class="prof-row-val">Black Cotton Soil</span></div>
+    <div class="prof-row"><span class="prof-row-key">Water Source</span><span class="prof-row-val">Drip + Borewell</span></div>
+    <div class="prof-row"><span class="prof-row-key">Khasra No.</span><span class="prof-row-val">MH-PUN-2345</span></div>
+    <div class="prof-row"><span class="prof-row-key">Ownership Status</span><span class="prof-row-val"><span class="badge bdg-green">Owned</span></span></div>
+    <div class="prof-row" style="border-bottom:none;"><span class="prof-row-key">Survey No.</span><span class="prof-row-val">47/2-B</span></div>
+  </div>
+
+  <!-- Financial Info -->
+  <div class="fin-card">
+    <div class="card-head"><div class="card-head-title"><span class="material-icons">bar_chart</span>Financial Overview — This Season</div></div>
+    <div style="padding:16px;">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+        <div class="stat-card"><div class="stat-lbl">Income</div><div class="stat-val" style="color:var(--primary);font-size:15px;">Rs.48,200</div></div>
+        <div class="stat-card"><div class="stat-lbl">Expenses</div><div class="stat-val" style="color:var(--danger);font-size:15px;">Rs.19,800</div></div>
+        <div class="stat-card"><div class="stat-lbl">Net Profit</div><div class="stat-val" style="color:var(--primary);font-size:15px;">Rs.28,400</div></div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-size:12px;color:var(--text-muted);">Profit vs Target (Rs.35,000)</span><span style="font-size:12px;font-weight:600;color:var(--primary);">81%</span></div>
+        <div class="fin-bar"><div class="fin-bar-fill" style="width:81%;"></div></div>
+      </div>
+    </div>
+    <div style="background:var(--bg);border-top:1px solid var(--border-light);">
+      <div class="prof-row"><span class="prof-row-key">Schemes Availed</span><span class="prof-row-val">3 Active</span></div>
+      <div class="prof-row"><span class="prof-row-key">Products Sold</span><span class="prof-row-val">8 listings</span></div>
+      <div class="prof-row" style="border-bottom:none;"><span class="prof-row-key">Loans Outstanding</span><span class="prof-row-val" style="color:var(--danger);">Rs.0</span></div>
+    </div>
+  </div>
+
+  <!-- Crop History -->
+  <div class="prof-sec">
+    <div class="prof-sec-head"><span class="material-icons">history</span>Crop History</div>
+    <div class="crop-hist-row"><div class="chr-left"><div class="chr-dot" style="background:#2E7D32;"></div><div><div class="chr-name">Soybean</div><div class="chr-meta">Kharif 2024 &middot; 2.0 Acre</div></div></div><div class="chr-yield">8.2 q/acre</div></div>
+    <div class="crop-hist-row"><div class="chr-left"><div class="chr-dot" style="background:#1565C0;"></div><div><div class="chr-name">Wheat</div><div class="chr-meta">Rabi 2023–24 &middot; 2.5 Acre</div></div></div><div class="chr-yield">18 q/acre</div></div>
+    <div class="crop-hist-row"><div class="chr-left"><div class="chr-dot" style="background:#E65100;"></div><div><div class="chr-name">Cotton</div><div class="chr-meta">Kharif 2023 &middot; 1.5 Acre</div></div></div><div class="chr-yield">6.5 q/acre</div></div>
+    <div class="crop-hist-row" style="border-bottom:none;"><div class="chr-left"><div class="chr-dot" style="background:#7B1FA2;"></div><div><div class="chr-name">Onion</div><div class="chr-meta">Rabi 2022–23 &middot; 1.0 Acre</div></div></div><div class="chr-yield">120 q/acre</div></div>
+  </div>
+
+  <!-- Schemes Availed -->
+  <div class="prof-sec">
+    <div class="prof-sec-head"><span class="material-icons">account_balance</span>Schemes Availed</div>
+    <div class="prof-row"><span class="prof-row-key">PM-KISAN Samman Nidhi</span><span class="prof-row-val"><span class="badge bdg-green">Active</span></span></div>
+    <div class="prof-row"><span class="prof-row-key">PM Fasal Bima Yojana</span><span class="prof-row-val"><span class="badge bdg-green">Enrolled</span></span></div>
+    <div class="prof-row" style="border-bottom:none;"><span class="prof-row-key">Soil Health Card</span><span class="prof-row-val"><span class="badge bdg-blue">Applied</span></span></div>
+  </div>
+
+  <!-- Language Selection -->
+  <div class="prof-sec">
+    <div class="prof-sec-head"><span class="material-icons">language</span>Language / Bhasha</div>
+    <div class="lang-grid">
+      <button class="lang-btn active" onclick="setLang(this,'en')">English</button>
+      <button class="lang-btn" onclick="setLang(this,'hi')">Hindi<br><span style="font-size:10px;">हिंदी</span></button>
+      <button class="lang-btn" onclick="setLang(this,'mr')">Marathi<br><span style="font-size:10px;">मराठी</span></button>
+      <button class="lang-btn" onclick="setLang(this,'te')">Telugu<br><span style="font-size:10px;">తెలుగు</span></button>
+      <button class="lang-btn" onclick="setLang(this,'kn')">Kannada<br><span style="font-size:10px;">ಕನ್ನಡ</span></button>
+      <button class="lang-btn" onclick="setLang(this,'ta')">Tamil<br><span style="font-size:10px;">தமிழ்</span></button>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+    <button class="btn btn-outline btn-full" onclick="downloadCard()"><span class="material-icons">download</span>Download ID</button>
+    <a href="customer.html" class="btn btn-blue btn-full"><span class="material-icons">shopping_cart</span>Customer View</a>
+  </div>
+  <button class="btn btn-danger btn-full" style="margin-bottom:8px;" onclick="handleLogout()"><span class="material-icons">logout</span>Sign Out of KisanBazaar AI</button>
+</div>
+</main>
+
+<!-- Edit Profile Modal -->
+<div class="modal-overlay" id="editModal" onclick="closeModalOnOverlay(event,'editModal')">
+  <div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title">Edit Profile</div><button class="modal-close" onclick="closeModal('editModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="editName" value="Ramesh Shankar Kumar"/></div>
+      <div class="form-2col">
+        <div class="form-group"><label class="form-label">Date of Birth</label><input class="form-input" id="editDob" type="date" value="1982-03-15"/></div>
+        <div class="form-group"><label class="form-label">Gender</label><select class="form-select" id="editGender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Village / Town</label><input class="form-input" id="editVillage" value="Shirur"/></div>
+      <div class="form-2col">
+        <div class="form-group"><label class="form-label">Land Area (Acres)</label><input class="form-input" id="editLand" type="number" value="4.5" min="0.1" step="0.1"/></div>
+        <div class="form-group"><label class="form-label">Soil Type</label><select class="form-select" id="editSoil"><option>Black Cotton</option><option>Red Soil</option><option>Alluvial</option><option>Sandy Loam</option><option>Clay</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Bank Account IFSC</label><input class="form-input" id="editIfsc" value="SBIN0012345" placeholder="e.g. SBIN0012345"/></div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="saveProfile()"><span class="material-icons">save</span>Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+window.initPage_profile = function() {
+  if (KB.user) {
+    const n = KB.user.name || 'Ramesh Kumar';
+    setTxt('profName', n); setTxt('cardName', n); setTxt('pr_fullname', n);
+    setTxt('profPhone', KB.user.phone || '+91 98765 43210');
+    setTxt('pr_phone',  KB.user.phone || '+91 98765 43210');
+    document.getElementById('editName').value = n;
+  }
+  if (KB.location) updateProfileLocation(KB.location);
+  window.onLocationChange = updateProfileLocation;
+
+  // Set active lang btn
+  const lang = KB.user?.lang || 'en';
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('onclick')?.includes(`'${lang}'`));
+  });
+};
+
+function updateProfileLocation(loc) {
+  setTxt('pr_district', loc.district || '—');
+  setTxt('pr_state',    loc.state    || '—');
+  setTxt('pr_mandal',   loc.mandal   || '—');
+  const locStr = [loc.district, loc.state].filter(Boolean).join(', ');
+  setTxt('cardLoc', locStr || '—');
+  const fid = generateFarmerID(loc.state, loc.district, loc.mandal, KB.user?.role || 'farmer', 1);
+  setTxt('profKisanId', 'Kisan ID: ' + fid);
+  setTxt('cardKisanId', fid);
+}
+
+function saveProfile() {
+  const name = document.getElementById('editName').value.trim();
+  if (!name) { toast('Name cannot be empty', 'error'); return; }
+  if (KB.user) {
+    KB.user.name = name;
+    localStorage.setItem('kb_user', JSON.stringify(KB.user));
+  }
+  setTxt('profName', name); setTxt('cardName', name); setTxt('pr_fullname', name);
+  const userNameEl = document.getElementById('hUserName'); if(userNameEl) userNameEl.textContent = name.split(' ')[0];
+  closeModal('editModal');
+  toast('Profile updated successfully!', 'success');
+}
+
+function setLang(btn, code) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (KB.user) { KB.user.lang = code; localStorage.setItem('kb_user', JSON.stringify(KB.user)); }
+  toast('Language set to: ' + btn.textContent.split('\n')[0].trim(), 'success');
+}
+
+function downloadCard() { toast('Kisan ID Card download — PDF coming soon', 'info'); }
+</script>
+</body>
+</html>

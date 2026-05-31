@@ -1,0 +1,161 @@
+<!-- ═══════════════════════════════════════════════════════════
+     MARKET PAGE v4
+     ═══════════════════════════════════════════════════════════ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Marketplace — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="market">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar">
+    <span class="material-icons">storefront</span><h2>Marketplace</h2>
+    <div class="kb-pgbar-right"><button class="btn btn-accent btn-sm" onclick="openModal('addProdModal')"><span class="material-icons">add</span>Sell Product</button></div>
+  </div>
+
+  <!-- AI Suggestion Strip -->
+  <div style="background:linear-gradient(90deg,var(--primary-light),var(--accent-light));border:1px solid #C8E6C9;border-radius:var(--r-sm);padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+    <span class="material-icons" style="color:var(--primary);font-size:20px;">smart_toy</span>
+    <div>
+      <div style="font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;color:var(--primary);">AI Market Insight</div>
+      <div style="font-size:11.5px;color:var(--text-muted);" id="mktAiTip">Tomato is high-demand this week. Best price location: Pune APMC — Rs.1,420/q.</div>
+    </div>
+  </div>
+
+  <!-- Search + Category -->
+  <div class="search-bar" style="margin-bottom:12px;">
+    <span class="material-icons">search</span>
+    <input type="text" id="mktSearch" placeholder="Search crops, vegetables, fruits, grains..." oninput="filterMkt()"/>
+  </div>
+  <div style="display:flex;gap:9px;margin-bottom:12px;">
+    <select class="form-select" id="mktCatDrop" style="flex:1;" onchange="filterMkt()">
+      <option value="all">All Categories</option>
+      <option value="vegetable">Vegetables</option>
+      <option value="fruit">Fruits</option>
+      <option value="grain">Grains &amp; Cereals</option>
+      <option value="pulse">Pulses &amp; Dals</option>
+      <option value="spice">Spices</option>
+    </select>
+    <select class="form-select" id="mktSortDrop" style="width:130px;" onchange="filterMkt()">
+      <option value="latest">Latest</option>
+      <option value="low">Price: Low</option>
+      <option value="high">Price: High</option>
+    </select>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:3px;margin-bottom:14px;">
+    <button id="tabBuy"  style="flex:1;border-radius:6px;background:var(--primary);color:#fff;font-family:'Poppins',sans-serif;font-size:12.5px;font-weight:600;border:none;padding:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:.18s;" onclick="switchTab('buy',this)"><span class="material-icons" style="font-size:14px;">shopping_cart</span>Buy Produce</button>
+    <button id="tabSell" style="flex:1;border-radius:6px;background:transparent;color:var(--text-muted);font-family:'Poppins',sans-serif;font-size:12.5px;font-weight:600;border:none;padding:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:.18s;" onclick="switchTab('sell',this)"><span class="material-icons" style="font-size:14px;">sell</span>My Listings</button>
+  </div>
+
+  <div id="buyPanel">
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;" id="mktCount">Loading products...</div>
+    <div class="kb-grid" id="prodGrid"></div>
+  </div>
+  <div id="sellPanel" style="display:none;">
+    <div class="info-box ib-green"><span class="material-icons">sell</span><p>Your active listings. Buyers contact you directly via WhatsApp. Add product details and a clear description for better visibility.</p></div>
+    <div id="myListings"></div>
+    <button class="btn btn-accent btn-full" style="margin-top:14px;" onclick="openModal('addProdModal')"><span class="material-icons">add_circle</span>Add New Product</button>
+  </div>
+</div>
+</main>
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="addProdModal" onclick="closeModalOnOverlay(event,'addProdModal')">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title">List Your Product</div><button class="modal-close" onclick="closeModal('addProdModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body">
+      <div style="margin-bottom:14px;">
+        <label class="form-label">Product Photo</label>
+        <div style="height:120px;border:2px dashed var(--border);border-radius:var(--r-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;background:var(--bg);transition:all .18s;" onclick="toast('Camera / gallery upload coming soon','info')" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--border)'">
+          <span class="material-icons" style="font-size:34px;color:var(--text-muted);">add_photo_alternate</span>
+          <span style="font-size:12.5px;color:var(--text-muted);">Tap to add product photo</span>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Product Name <span class="form-req">*</span></label><input class="form-input" id="apName" placeholder="e.g. Fresh Tomatoes, Grade A"/></div>
+      <div class="form-2col">
+        <div class="form-group"><label class="form-label">Quantity (kg) <span class="form-req">*</span></label><input class="form-input" id="apQty" type="number" placeholder="100" min="1"/></div>
+        <div class="form-group"><label class="form-label">Price/kg (Rs.) <span class="form-req">*</span></label><input class="form-input" id="apPrice" type="number" placeholder="25" min="1"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">Category</label><select class="form-select" id="apCat"><option value="vegetable">Vegetable</option><option value="fruit">Fruit</option><option value="grain">Grain</option><option value="pulse">Pulse</option></select></div>
+      <div class="form-group"><label class="form-label">Quality Grade</label><select class="form-select" id="apGrade"><option>A Grade</option><option>Premium</option><option>Fresh</option><option>Organic</option><option>Grade 1</option></select></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-textarea" id="apDesc" placeholder="Quality, farming method, harvest date..." rows="2"></textarea></div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="addProduct()"><span class="material-icons">check_circle</span>List My Product</button>
+    </div>
+  </div>
+</div>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const PRODUCTS = [
+  {id:1,name:'Fresh Tomatoes',   farmer:'Suresh Patil',  village:'Nashik, MH',   price:22, qty:250, cat:'vegetable',quality:'A Grade',organic:false,img:0},
+  {id:2,name:'Red Onion',        farmer:'Vilas Shinde',  village:'Solapur, MH',  price:18, qty:500, cat:'vegetable',quality:'Premium', organic:false,img:1},
+  {id:3,name:'Alphonso Mango',   farmer:'Anand Sawant',  village:'Ratnagiri, MH',price:180,qty:80,  cat:'fruit',   quality:'Export',  organic:true, img:2},
+  {id:4,name:'Soybean Grade A',  farmer:'Priya Deshmukh',village:'Latur, MH',    price:48, qty:2000,cat:'grain',   quality:'A Grade', organic:false,img:3},
+  {id:5,name:'Green Chilli',     farmer:'Kavita Jadhav', village:'Dhule, MH',    price:35, qty:100, cat:'vegetable',quality:'Fresh',   organic:false,img:4},
+  {id:6,name:'Toor Dal',         farmer:'Mohan Kulkarni',village:'Osmanabad, MH',price:92, qty:400, cat:'pulse',   quality:'Grade 1', organic:false,img:5},
+  {id:7,name:'Pomegranate',      farmer:'Sita Kale',     village:'Solapur, MH',  price:95, qty:300, cat:'fruit',   quality:'A Grade', organic:true, img:6},
+  {id:8,name:'Wheat Sharbati',   farmer:'Dilip Wagh',    village:'Ahmednagar,MH',price:26, qty:1500,cat:'grain',   quality:'Grade 1', organic:false,img:7},
+];
+let myProds = JSON.parse(localStorage.getItem('kb_mkt_prods')||'[]');
+let currentCat='all', currentSort='latest', searchQ='';
+
+window.initPage_market = function() {
+  renderProds();
+  renderMyListings();
+  if(KB.location){ const s=LOC_AI[KB.location.state]||LOC_AI['Maharashtra']; setTxt('mktAiTip',s.sug+' — '+s.sub); }
+};
+
+function filterMkt(){currentCat=document.getElementById('mktCatDrop').value;currentSort=document.getElementById('mktSortDrop').value;searchQ=document.getElementById('mktSearch').value.toLowerCase();renderProds();}
+
+function renderProds(){
+  const el=document.getElementById('prodGrid'); if(!el) return;
+  let list=[...PRODUCTS,...myProds];
+  if(currentCat!=='all') list=list.filter(p=>p.cat===currentCat);
+  if(searchQ) list=list.filter(p=>p.name.toLowerCase().includes(searchQ)||p.farmer.toLowerCase().includes(searchQ));
+  if(currentSort==='low') list.sort((a,b)=>a.price-b.price);
+  else if(currentSort==='high') list.sort((a,b)=>b.price-a.price);
+  setTxt('mktCount', list.length+' products found');
+  if(!list.length){el.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><span class="material-icons">storefront</span><h4>No products found</h4><p>Try different search or category</p></div>`;return;}
+  el.innerHTML=list.map(p=>`
+    <div class="prod-card">
+      <div style="position:relative;">
+        <img src="${pimg(IMG.products,p.img||0)}" alt="${p.name}" style="width:100%;height:130px;object-fit:cover;display:block;" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="prod-card-img-fallback" style="display:none;"><span class="material-icons">local_florist</span></div>
+        <div class="prod-card-badges">
+          <span class="badge bdg-green" style="font-size:9px;">${p.quality||'Fresh'}</span>
+          ${p.organic?'<span class="badge bdg-teal" style="font-size:9px;">Organic</span>':''}
+        </div>
+      </div>
+      <div class="prod-card-body">
+        <div class="prod-card-name">${p.name}</div>
+        <div class="prod-card-farmer"><span class="material-icons">person</span>${p.farmer}, ${p.village}</div>
+        <div class="prod-card-price">Rs.${p.price}<small>/kg</small></div>
+        <div class="prod-card-qty">Available: ${p.qty} kg</div>
+        <div class="qty-row">
+          <div class="qty-btn" onclick="chQty(${p.id},-1)">−</div>
+          <span class="qty-val" id="pq_${p.id}">1</span>
+          <span class="qty-unit">kg</span>
+          <div class="qty-btn" onclick="chQty(${p.id},1)">+</div>
+        </div>
+        <button class="btn btn-whatsapp btn-full btn-sm" onclick="orderWA('${p.farmer}','${p.name}',${p.price},${p.id})"><span class="material-icons">chat</span>WhatsApp Order</button>
+      </div>
+    </div>`).join('');
+}
+function chQty(id,d){const el=document.getElementById('pq_'+id);if(el)el.textContent=Math.max(1,parseInt(el.textContent)+d);}
+function orderWA(farmer,prod,price,id){const qty=document.getElementById('pq_'+id)?.textContent||1;const msg=encodeURIComponent(`Hello ${farmer}, I want to buy ${qty} kg of ${prod} at Rs.${price}/kg from KisanBazaar AI. Please confirm availability.`);window.open(`https://wa.me/?text=${msg}`,'_blank');}
+function addProduct(){const name=document.getElementById('apName').value.trim();const qty=document.getElementById('apQty').value;const price=document.getElementById('apPrice').value;const cat=document.getElementById('apCat').value;const grade=document.getElementById('apGrade').value;if(!name||!qty||!price){toast('Fill all required fields','error');return;}const p={id:Date.now(),name,qty:parseInt(qty),price:parseInt(price),cat,quality:grade,organic:false,farmer:KB.user?.name||'Ramesh Kumar',village:'My Farm',img:0};myProds.push(p);localStorage.setItem('kb_mkt_prods',JSON.stringify(myProds));closeModal('addProdModal');['apName','apQty','apPrice','apDesc'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});renderProds();renderMyListings();toast('Product listed successfully!','success');}
+function renderMyListings(){const el=document.getElementById('myListings');if(!el)return;if(!myProds.length){el.innerHTML='<div class="empty-state"><span class="material-icons">sell</span><h4>No listings yet</h4><p>Add your first product to start selling</p></div>';return;}el.innerHTML=myProds.map(p=>`<div class="card" style="margin-bottom:10px;"><div class="card-body" style="display:flex;gap:12px;align-items:center;"><img src="${pimg(IMG.products,p.img||0)}" style="width:50px;height:50px;border-radius:10px;object-fit:cover;flex-shrink:0;" onerror="this.style.background='var(--primary-light)'"/><div style="flex:1;"><div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:13px;">${p.name}</div><div style="font-size:11px;color:var(--text-muted);">${p.qty} kg &middot; Rs.${p.price}/kg &middot; ${p.quality}</div></div><div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;"><span class="badge bdg-green">Active</span><button class="btn btn-danger btn-xs" onclick="removeProd(${p.id})"><span class="material-icons">delete</span></button></div></div></div>`).join('');}
+function removeProd(id){myProds=myProds.filter(p=>p.id!==id);localStorage.setItem('kb_mkt_prods',JSON.stringify(myProds));renderMyListings();renderProds();toast('Listing removed','info');}
+function switchTab(tab,btn){document.getElementById('buyPanel').style.display=tab==='buy'?'block':'none';document.getElementById('sellPanel').style.display=tab==='sell'?'block':'none';['tabBuy','tabSell'].forEach(id=>{const b=document.getElementById(id);if(b){b.style.background=b.id==='tab'+tab.charAt(0).toUpperCase()+tab.slice(1)?'var(--primary)':'transparent';b.style.color=b.id==='tab'+tab.charAt(0).toUpperCase()+tab.slice(1)?'#fff':'var(--text-muted)';}});if(tab==='sell')renderMyListings();}
+</script>
+</body>
+</html>

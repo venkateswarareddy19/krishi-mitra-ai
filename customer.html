@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>KisanBazaar AI — Fresh from Farm</title>
+<link rel="stylesheet" href="customer.css"/>
+</head>
+<body>
+<div id="custToast"></div>
+
+<!-- HEADER -->
+<header class="cust-header">
+  <div class="cust-header-inner">
+    <div class="cust-logo">
+      <div class="cust-logo-box"><span class="material-icons">eco</span></div>
+      <div>
+        <div class="cust-logo-name">KisanBazaar</div>
+        <div class="cust-logo-sub">Fresh from Farm · Direct</div>
+      </div>
+    </div>
+    <div class="cust-search-wrap">
+      <span class="material-icons cust-search-icon">search</span>
+      <input class="cust-search" type="text" id="custSearch" placeholder="Search vegetables, fruits, grains..." oninput="searchProds()"/>
+    </div>
+    <div class="cust-header-right">
+      <button class="cust-icon-btn" onclick="openCart()">
+        <span class="material-icons">shopping_cart</span>
+        <div class="cart-count" id="cartCountBadge">0</div>
+      </button>
+      <a href="login.html" class="cust-icon-btn">
+        <span class="material-icons">account_circle</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN PAGE -->
+<main class="cust-page">
+<div class="cust-container">
+
+  <!-- Hero Banner -->
+  <div class="cust-hero">
+    <div class="ch-tag">Fresh · Direct · Verified Farmers</div>
+    <div class="ch-title">Farm to Your Doorstep<br/>in 24 Hours</div>
+    <div class="ch-sub">Buy directly from 12,000+ verified farmers across India. No middlemen. Best prices guaranteed.</div>
+    <div class="ch-stats">
+      <div><div class="ch-stat-val">12,000+</div><div class="ch-stat-lbl">Farmers</div></div>
+      <div><div class="ch-stat-val">50,000+</div><div class="ch-stat-lbl">Customers</div></div>
+      <div><div class="ch-stat-val">98%</div><div class="ch-stat-lbl">Fresh Rating</div></div>
+    </div>
+  </div>
+
+  <!-- Live Price Ticker -->
+  <div class="live-ticker">
+    <span class="lt-label">LIVE PRICES</span>
+    <div class="lt-scroll"><div class="lt-inner">
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);">Tomato</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹22/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Onion</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹18/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Mango</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹120/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Potato</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹24/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Banana</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹32/kg</span>
+      <!-- Duplicate for loop -->
+      <span style="color:rgba(255,255,255,.22);margin:0 8px;">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);">Tomato</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹22/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Onion</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹18/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Mango</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹120/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Potato</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹24/kg</span>
+      <span style="color:rgba(255,255,255,.22);">|</span>
+      <span style="font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,.9);margin-left:8px;">Banana</span><span style="font-size:11px;font-weight:700;color:#F9A825;margin:0 8px;">₹32/kg</span>
+    </div></div>
+  </div>
+
+  <!-- Category Icons -->
+  <div class="cat-scroll" id="catScroll">
+    <div class="cat-item active" onclick="filterCat('all',this)">
+      <div class="cat-icon" style="background:#E8F5E9;"><span class="material-icons" style="color:#2E7D32;">apps</span></div>
+      <div class="cat-label">All</div>
+    </div>
+    <div class="cat-item" onclick="filterCat('vegetable',this)">
+      <div class="cat-icon" style="background:#E8F5E9;"><span class="material-icons" style="color:#388E3C;">local_florist</span></div>
+      <div class="cat-label">Vegetables</div>
+    </div>
+    <div class="cat-item" onclick="filterCat('fruit',this)">
+      <div class="cat-icon" style="background:#FFF8E1;"><span class="material-icons" style="color:#E65100;">spa</span></div>
+      <div class="cat-label">Fruits</div>
+    </div>
+    <div class="cat-item" onclick="filterCat('grain',this)">
+      <div class="cat-icon" style="background:#E3F2FD;"><span class="material-icons" style="color:#1565C0;">grain</span></div>
+      <div class="cat-label">Grains</div>
+    </div>
+    <div class="cat-item" onclick="filterCat('pulse',this)">
+      <div class="cat-icon" style="background:#E0F2F1;"><span class="material-icons" style="color:#00695C;">eco</span></div>
+      <div class="cat-label">Pulses</div>
+    </div>
+    <div class="cat-item" onclick="filterCat('organic',this)">
+      <div class="cat-icon" style="background:#F1F8E9;"><span class="material-icons" style="color:#33691E;">energy_savings_leaf</span></div>
+      <div class="cat-label">Organic</div>
+    </div>
+    <div class="cat-item" onclick="filterCat('spice',this)">
+      <div class="cat-icon" style="background:#FBE9E7;"><span class="material-icons" style="color:#BF360C;">star</span></div>
+      <div class="cat-label">Spices</div>
+    </div>
+  </div>
+
+  <!-- Filters Row -->
+  <div class="cust-filter-row" id="custFilterRow">
+    <div class="cf-chip active" onclick="sortCust('latest',this)">Latest</div>
+    <div class="cf-chip" onclick="sortCust('price_low',this)"><span class="material-icons">arrow_upward</span>Price Low</div>
+    <div class="cf-chip" onclick="sortCust('price_high',this)"><span class="material-icons">arrow_downward</span>Price High</div>
+    <div class="cf-chip" onclick="sortCust('organic',this)"><span class="material-icons">eco</span>Organic Only</div>
+    <div class="cf-chip" onclick="sortCust('fresh',this)"><span class="material-icons">local_florist</span>Today's Harvest</div>
+  </div>
+
+  <!-- Products Grid -->
+  <div class="sec-head">
+    <div class="sec-title" id="prodSectionTitle">All Products</div>
+    <div class="sec-link" id="prodCount" style="color:var(--c-muted);font-size:12px;">Loading...</div>
+  </div>
+  <div class="cust-prod-grid" id="custProdGrid"></div>
+
+</div>
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="cust-bottom-nav">
+  <button class="cbn-item active"><span class="material-icons">home</span><span>Home</span></button>
+  <button class="cbn-item" onclick="filterCat('vegetable',document.querySelector('.cat-item:nth-child(2)'))"><span class="material-icons">local_florist</span><span>Vegetables</span></button>
+  <button class="cbn-item" onclick="openCart()"><span class="material-icons">shopping_cart</span><span>Cart</span></button>
+  <button class="cbn-item"><span class="material-icons">favorite_border</span><span>Wishlist</span></button>
+  <a href="profile.html" class="cbn-item"><span class="material-icons">account_circle</span><span>Profile</span></a>
+</nav>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCartOnOverlay(event)">
+  <div class="cart-drawer">
+    <div class="cart-handle"></div>
+    <div class="cart-head">
+      <div class="cart-title">My Cart (<span id="cartItemCount">0</span> items)</div>
+      <button class="cart-close" onclick="closeCart()"><span class="material-icons">close</span></button>
+    </div>
+    <div id="cartBody"></div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+      <div class="cart-total-row">
+        <div class="cart-total-label">Total Amount</div>
+        <div class="cart-total-val" id="cartTotal">₹0</div>
+      </div>
+      <button class="cart-checkout-btn" onclick="checkoutWA()">
+        <span class="material-icons">chat</span>Order via WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="customer.js"></script>
+</body>
+</html>

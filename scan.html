@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Crop Disease Scan — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="scan">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar">
+    <span class="material-icons">document_scanner</span><h2>Crop Disease Scanner</h2>
+    <div class="kb-pgbar-right"><span class="badge bdg-blue"><span class="material-icons">auto_awesome</span>AI Powered</span></div>
+  </div>
+
+  <div class="info-box ib-blue"><span class="material-icons">tips_and_updates</span><p>Take a clear, well-lit photo of the affected leaf or plant part. Avoid blurry or dark images. AI accuracy improves with close-up shots of visible symptoms.</p></div>
+
+  <!-- Crop selector -->
+  <div style="margin-bottom:14px;">
+    <div class="s-label" style="margin-bottom:8px;">Select Your Crop</div>
+    <div class="filter-row" style="flex-wrap:wrap;">
+      <div class="f-chip active" onclick="setScanCrop('Tomato',this)"><span class="material-icons">local_florist</span>Tomato</div>
+      <div class="f-chip" onclick="setScanCrop('Soybean',this)">Soybean</div>
+      <div class="f-chip" onclick="setScanCrop('Cotton',this)">Cotton</div>
+      <div class="f-chip" onclick="setScanCrop('Wheat',this)">Wheat</div>
+      <div class="f-chip" onclick="setScanCrop('Onion',this)">Onion</div>
+      <div class="f-chip" onclick="setScanCrop('Rice',this)">Rice</div>
+      <div class="f-chip" onclick="setScanCrop('Maize',this)">Maize</div>
+      <div class="f-chip" onclick="setScanCrop('Groundnut',this)">Groundnut</div>
+    </div>
+  </div>
+
+  <!-- Upload Zone -->
+  <div id="uploadZone">
+    <div class="scan-drop" id="dropZone" onclick="document.getElementById('scanFile').click()">
+      <div class="scan-circle"><span class="material-icons">camera_alt</span></div>
+      <div class="scan-drop-title">Upload Plant Photo</div>
+      <div class="scan-drop-sub">Tap to capture photo or drag &amp; drop image here</div>
+      <div style="display:flex;gap:9px;margin-top:4px;">
+        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();document.getElementById('scanFile').click()"><span class="material-icons">camera_alt</span>Take Photo</button>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();document.getElementById('scanFile').click()"><span class="material-icons">upload</span>Browse</button>
+      </div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:6px;">Supported: JPG, PNG, WEBP · Max 10MB</div>
+    </div>
+    <input type="file" id="scanFile" accept="image/*" capture="environment" style="display:none;" onchange="handleScanUpload(event)"/>
+
+    <!-- Camera Simulation UI -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:14px;box-shadow:var(--shadow-xs);">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <span class="material-icons" style="color:var(--primary);">camera</span>
+        <div style="font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;">Camera Preview</div>
+        <span class="badge bdg-gray" style="margin-left:auto;">Simulation</span>
+      </div>
+      <div style="background:#1A1A1A;border-radius:var(--r-sm);height:160px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&q=70') center/cover;opacity:0.35;"></div>
+        <!-- Camera frame corners -->
+        <div style="position:absolute;top:14px;left:14px;width:28px;height:28px;border-top:2.5px solid #fff;border-left:2.5px solid #fff;border-radius:3px 0 0 0;"></div>
+        <div style="position:absolute;top:14px;right:14px;width:28px;height:28px;border-top:2.5px solid #fff;border-right:2.5px solid #fff;border-radius:0 3px 0 0;"></div>
+        <div style="position:absolute;bottom:14px;left:14px;width:28px;height:28px;border-bottom:2.5px solid #fff;border-left:2.5px solid #fff;border-radius:0 0 0 3px;"></div>
+        <div style="position:absolute;bottom:14px;right:14px;width:28px;height:28px;border-bottom:2.5px solid #fff;border-right:2.5px solid #fff;border-radius:0 0 3px 0;"></div>
+        <!-- Crosshair -->
+        <div style="width:30px;height:30px;border:1.5px solid rgba(255,255,255,0.7);border-radius:50%;position:relative;z-index:1;">
+          <div style="position:absolute;left:50%;top:-8px;transform:translateX(-50%);width:1px;height:6px;background:rgba(255,255,255,0.7);"></div>
+          <div style="position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);width:1px;height:6px;background:rgba(255,255,255,0.7);"></div>
+          <div style="position:absolute;top:50%;left:-8px;transform:translateY(-50%);width:6px;height:1px;background:rgba(255,255,255,0.7);"></div>
+          <div style="position:absolute;top:50%;right:-8px;transform:translateY(-50%);width:6px;height:1px;background:rgba(255,255,255,0.7);"></div>
+        </div>
+        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:10px;color:rgba(255,255,255,0.7);white-space:nowrap;">Point camera at affected leaf</div>
+      </div>
+      <button class="btn btn-primary btn-full" style="margin-top:12px;" onclick="document.getElementById('scanFile').click()">
+        <span class="material-icons">camera</span>Capture &amp; Scan
+      </button>
+    </div>
+
+    <!-- Drone Integration Panel -->
+    <div class="device-card">
+      <div class="device-head">
+        <div class="device-icon" style="background:#E3F2FD;"><span class="material-icons" style="color:#1565C0;">flight</span></div>
+        <div style="flex:1;">
+          <div class="device-name">Drone Integration</div>
+          <div id="droneStatus" class="device-status-off"><span class="material-icons">circle</span>Not Connected</div>
+        </div>
+        <button class="btn btn-blue btn-sm" id="droneConnectBtn" onclick="connectDrone()"><span class="material-icons">link</span>Connect</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:10px;">Connect your agricultural drone to scan entire fields automatically. Covers 10 acres/hour with NDVI analysis and disease mapping.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="dronePanel">
+        <div style="background:var(--bg);border-radius:var(--r-sm);padding:10px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:3px;">Coverage</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;">-- Acres</div>
+        </div>
+        <div style="background:var(--bg);border-radius:var(--r-sm);padding:10px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-muted);margin-bottom:3px;">Battery</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;" id="droneBattery">--%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IoT Sensors Panel -->
+    <div class="device-card">
+      <div class="device-head">
+        <div class="device-icon" style="background:#E8F5E9;"><span class="material-icons" style="color:#2E7D32;">sensors</span></div>
+        <div style="flex:1;">
+          <div class="device-name">IoT Field Sensors</div>
+          <div class="device-status-on"><span class="material-icons">circle</span>3 Sensors Active</div>
+        </div>
+        <button class="btn btn-ghost btn-sm"><span class="material-icons">refresh</span>Refresh</button>
+      </div>
+      <div class="sensor-row"><div class="sensor-label">Soil Moisture</div><div class="sensor-value" id="soilMoisture">68% — Adequate</div></div>
+      <div class="sensor-row"><div class="sensor-label">Soil Temperature</div><div class="sensor-value">28.4°C</div></div>
+      <div class="sensor-row"><div class="sensor-label">Soil pH</div><div class="sensor-value">6.8 — Normal</div></div>
+      <div class="sensor-row"><div class="sensor-label">Air Humidity</div><div class="sensor-value">72%</div></div>
+      <div class="sensor-row" style="border-bottom:none;"><div class="sensor-label">Leaf Wetness</div><div class="sensor-value" style="color:var(--warning);">High — Disease Risk</div></div>
+    </div>
+  </div>
+
+  <!-- Analyzing -->
+  <div id="analyzingZone" style="display:none;">
+    <div style="background:var(--card);border-radius:var(--r);border:1px solid var(--border);padding:36px 20px;text-align:center;box-shadow:var(--shadow-sm);">
+      <div class="scan-spinner" style="width:56px;height:56px;border-width:4px;"></div>
+      <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">Analyzing Your Crop Image</div>
+      <div style="font-size:12.5px;color:var(--text-muted);margin-bottom:14px;">AI is processing — this takes a few seconds</div>
+      <div style="display:flex;flex-direction:column;gap:7px;max-width:260px;margin:0 auto;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);"><span class="material-icons" style="font-size:15px;color:var(--primary);">check_circle</span>Image uploaded successfully</div>
+        <div id="step2Ind" style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);"><span class="material-icons" style="font-size:15px;color:var(--text-light);">hourglass_empty</span>Pattern recognition in progress...</div>
+        <div id="step3Ind" style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-muted);opacity:0.4;"><span class="material-icons" style="font-size:15px;color:var(--text-light);">hourglass_empty</span>Generating treatment plan...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result -->
+  <div id="resultZone" style="display:none;">
+    <div style="border-radius:var(--r);overflow:hidden;margin-bottom:14px;border:1px solid var(--border);">
+      <img id="resultImg" src="" alt="Scanned plant" style="width:100%;height:220px;object-fit:cover;display:block;"/>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <div class="scan-result-head">
+        <span class="material-icons" style="font-size:26px;color:var(--danger);">coronavirus</span>
+        <div>
+          <div class="scan-result-disease" id="rDisease">Disease Name</div>
+          <div style="font-size:12px;color:#C62828;" id="rCropLabel">Detected in: Tomato</div>
+          <div style="margin-top:4px;"><span class="badge bdg-red" id="rSevBadge">High Severity</span></div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="s-label" style="margin-bottom:10px;">Severity Analysis</div>
+        <div class="sev-row"><div class="sev-lbl">Overall</div><div class="sev-bar"><div class="sev-fill sev-high" id="rSevFill" style="width:72%;"></div></div><div class="sev-pct" id="rSevPct" style="color:var(--danger);">72%</div></div>
+        <div class="sev-row"><div class="sev-lbl">Spread Rate</div><div class="sev-bar"><div class="sev-fill sev-med" style="width:45%;"></div></div><div class="sev-pct" style="color:var(--warning);">45%</div></div>
+        <div class="sev-row"><div class="sev-lbl">Urgency</div><div class="sev-bar"><div class="sev-fill sev-high" style="width:80%;"></div></div><div class="sev-pct" style="color:var(--danger);">High</div></div>
+        <div class="divider"></div>
+        <div class="s-label" style="margin-bottom:10px;">Recommended Treatment Plan</div>
+        <div id="rSteps"></div>
+        <div class="divider"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+          <a href="buy-inputs.html" class="btn btn-primary btn-full"><span class="material-icons">shopping_bag</span>Buy Treatment</a>
+          <a href="advisory.html" class="btn btn-outline btn-full"><span class="material-icons">chat</span>Ask AI Expert</a>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-full" onclick="resetScan()"><span class="material-icons">refresh</span>Scan Another Image</button>
+  </div>
+</div>
+</main>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+let scanCrop = 'Tomato';
+let droneConnected = false;
+
+const DISEASE_DB = {
+  Tomato:    {d:'Tomato Early Blight',      sev:68,sevC:'sev-med',badge:'bdg-yellow',badgeTxt:'Moderate Severity',steps:['Remove and destroy all infected leaves immediately. Never compost diseased plant material.','Apply Mancozeb 75% WP at 2g per litre of water as foliar spray every 7 days.','Ensure 45 cm plant spacing for good air circulation throughout the crop.','Switch to drip irrigation — avoid overhead watering that promotes spore spread.','Apply Trichoderma viride at 5g/kg soil as a preventive biological control measure.']},
+  Soybean:   {d:'Soybean Leaf Rust',        sev:72,sevC:'sev-high',badge:'bdg-red',badgeTxt:'High Severity',steps:['Apply Tebuconazole 25.9% EC at 1ml per litre of water as foliar spray immediately.','Repeat spray after 14 days if symptoms persist on newly emerging leaves.','Ensure proper field drainage — leaf rust spreads rapidly in waterlogged conditions.','Remove and destroy severely infected plants to prevent spread to adjacent plants.','Source rust-resistant variety seeds from nearest Krishi Vigyan Kendra for next season.']},
+  Cotton:    {d:'Cotton Leaf Curl Virus',   sev:80,sevC:'sev-high',badge:'bdg-red',badgeTxt:'Very High — Act Now',steps:['Remove and burn all severely infected plants immediately — no chemical cure for this virus.','Control whitefly vector: apply Imidacloprid 70% WG at 0.5g per litre urgently.','Install yellow sticky traps at 5 per acre to monitor and reduce whitefly population.','Apply Neem oil 5000 PPM spray every 10 days as a preventive measure on healthy plants.','Report to local Agriculture Officer if crop loss exceeds 30% for compensation application.']},
+  Wheat:     {d:'Wheat Powdery Mildew',     sev:45,sevC:'sev-med',badge:'bdg-yellow',badgeTxt:'Moderate Severity',steps:['Apply Propiconazole 25% EC at 1ml per litre of water as foliar spray on affected areas.','Avoid excess nitrogen fertiliser application — it significantly worsens disease susceptibility.','Maintain proper plant spacing for adequate air circulation between rows.','Apply sulphur dust at 20-25 kg per acre as an alternative or supplementary control.','Monitor field edges first — powdery mildew typically starts from edges and spreads inward.']},
+  Onion:     {d:'Onion Purple Blotch',      sev:55,sevC:'sev-med',badge:'bdg-yellow',badgeTxt:'Moderate Severity',steps:['Apply Mancozeb and Carbendazim combination (2+1 g per litre) spray immediately on all affected plants.','Repeat spray every 10 days during periods of high humidity above 80%.','Avoid excessive irrigation that increases leaf surface wetness duration overnight.','Destroy all crop debris after harvest to prevent disease carry-over to next season.','Use only certified, disease-free planting material (sets/seedlings) for next season.']},
+  Rice:      {d:'Rice Blast Disease',       sev:78,sevC:'sev-high',badge:'bdg-red',badgeTxt:'High Severity',steps:['Apply Tricyclazole 75% WP at 0.6g per litre of water at the very first sign of disease.','Drain field water for 2-3 days — drying conditions significantly reduce blast severity.','Avoid single heavy nitrogen application — split into 2-3 smaller doses to reduce blast risk.','Plant blast-resistant varieties next season: Swarna Sub-1, MTU-1010, or similar.','Spray Hexaconazole 5% EC at 2ml per litre at the critical panicle initiation stage.']},
+  Maize:     {d:'Northern Leaf Blight',     sev:60,sevC:'sev-med',badge:'bdg-yellow',badgeTxt:'Moderate Severity',steps:['Apply Zineb 75% WP at 2g per litre of water as foliar spray on all affected plants promptly.','Remove infected lower leaves carefully to prevent upward spread of fungal spores.','Ensure balanced fertilisation — avoid excess nitrogen which significantly worsens blight.','Practice crop rotation with legumes (soybean, groundnut) next season in the same field.','Plant certified blight-resistant hybrid varieties — consult local seed dealer for options.']},
+  Groundnut: {d:'Groundnut Leaf Spot',      sev:50,sevC:'sev-med',badge:'bdg-yellow',badgeTxt:'Moderate Severity',steps:['Apply Chlorothalonil 75% WP at 2g per litre of water as foliar spray immediately.','Repeat spray every 10-14 days depending on disease progression and weather conditions.','Ensure good drainage — waterlogged fields increase leaf spot severity significantly.','Collect and destroy fallen diseased leaves to reduce soil-borne inoculum load.','Choose tolerant varieties like TAG-24 or GG-20 in the next cropping season.']},
+};
+
+window.initPage_scan = function() {};
+
+function setScanCrop(crop, el) {
+  document.querySelectorAll('#uploadZone .f-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  scanCrop = crop;
+}
+
+function handleScanUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.getElementById('resultImg').src = ev.target.result;
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('analyzingZone').style.display = 'block';
+    // Simulate progressive steps
+    setTimeout(() => {
+      const s2 = document.getElementById('step2Ind');
+      if (s2) { s2.querySelector('.material-icons').textContent = 'check_circle'; s2.querySelector('.material-icons').style.color = 'var(--primary)'; }
+    }, 900);
+    setTimeout(() => {
+      const s3 = document.getElementById('step3Ind');
+      if (s3) { s3.style.opacity = '1'; s3.querySelector('.material-icons').textContent = 'check_circle'; s3.querySelector('.material-icons').style.color = 'var(--primary)'; }
+    }, 1800);
+    setTimeout(() => { document.getElementById('analyzingZone').style.display = 'none'; showScanResult(); }, 2900);
+  };
+  reader.readAsDataURL(file);
+}
+
+function showScanResult() {
+  const d = DISEASE_DB[scanCrop] || DISEASE_DB.Tomato;
+  setTxt('rDisease', d.d);
+  setTxt('rCropLabel', 'Detected in: ' + scanCrop);
+  const fill = document.getElementById('rSevFill');
+  if (fill) { fill.style.width = d.sev + '%'; fill.className = 'sev-fill ' + d.sevC; }
+  setTxt('rSevPct', d.sev + '%');
+  const badge = document.getElementById('rSevBadge');
+  if (badge) { badge.className = 'badge ' + d.badge; badge.textContent = d.badgeTxt; }
+  document.getElementById('rSteps').innerHTML = d.steps.map((s,i) => `
+    <div class="step-row">
+      <div class="step-num">${i+1}</div>
+      <div class="step-txt">${s}</div>
+    </div>`).join('');
+  document.getElementById('resultZone').style.display = 'block';
+}
+
+function resetScan() {
+  const sf = document.getElementById('scanFile'); if (sf) sf.value = '';
+  document.getElementById('uploadZone').style.display = 'block';
+  document.getElementById('analyzingZone').style.display = 'none';
+  document.getElementById('resultZone').style.display = 'none';
+  // Reset step indicators
+  ['step2Ind','step3Ind'].forEach(id => {
+    const el = document.getElementById(id); if(!el) return;
+    const ic = el.querySelector('.material-icons');
+    if (ic) { ic.textContent = 'hourglass_empty'; ic.style.color = 'var(--text-light)'; }
+    if (id === 'step3Ind') el.style.opacity = '0.4';
+  });
+}
+
+function connectDrone() {
+  const btn = document.getElementById('droneConnectBtn');
+  const status = document.getElementById('droneStatus');
+  const battery = document.getElementById('droneBattery');
+  if (!droneConnected) {
+    btn.innerHTML = '<span class="material-icons">hourglass_empty</span>Connecting...';
+    btn.disabled = true;
+    toast('Searching for drone signal...', 'info');
+    setTimeout(() => {
+      droneConnected = true;
+      btn.innerHTML = '<span class="material-icons">link_off</span>Disconnect';
+      btn.disabled = false;
+      btn.className = 'btn btn-danger btn-sm';
+      status.className = 'device-status-on';
+      status.innerHTML = '<span class="material-icons">circle</span>Connected — DJI Agras T30';
+      battery.textContent = '87%';
+      toast('Drone connected successfully!', 'success');
+    }, 2000);
+  } else {
+    droneConnected = false;
+    btn.innerHTML = '<span class="material-icons">link</span>Connect';
+    btn.className = 'btn btn-blue btn-sm';
+    status.className = 'device-status-off';
+    status.innerHTML = '<span class="material-icons">circle</span>Not Connected';
+    battery.textContent = '--%';
+    toast('Drone disconnected', 'info');
+  }
+}
+
+// Drag & drop
+const dz = document.getElementById('dropZone');
+if (dz) {
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('over'); }));
+  dz.addEventListener('drop', e => {
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('image/')) {
+      const dt = new DataTransfer(); dt.items.add(f);
+      document.getElementById('scanFile').files = dt.files;
+      handleScanUpload({ target: { files: dt.files } });
+    }
+  });
+}
+
+// Animate soil moisture value
+setInterval(() => {
+  const el = document.getElementById('soilMoisture');
+  if (el) {
+    const v = 65 + Math.floor(Math.random() * 8);
+    el.textContent = v + '% — ' + (v > 70 ? 'Adequate' : v > 55 ? 'Adequate' : 'Low');
+    el.style.color = v > 55 ? 'var(--text)' : 'var(--danger)';
+  }
+}, 4000);
+</script>
+</body>
+</html>

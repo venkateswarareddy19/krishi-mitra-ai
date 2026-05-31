@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Buy Inputs — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="buy-inputs">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar"><span class="material-icons">science</span><h2>Buy Inputs</h2><div class="kb-pgbar-right"><span class="badge bdg-green"><span class="material-icons">verified</span>Verified Sellers</span></div></div>
+
+  <!-- Search -->
+  <div class="search-bar">
+    <span class="material-icons">search</span>
+    <input type="text" id="inputSearch" placeholder="Search seeds, fertilizers, pesticides, tools..." oninput="filterInputs()"/>
+  </div>
+
+  <!-- Category Filters -->
+  <div class="filter-row" id="inputFilterRow">
+    <div class="f-chip active" onclick="setInputCat('all',this)"><span class="material-icons">apps</span>All</div>
+    <div class="f-chip" onclick="setInputCat('seed',this)"><span class="material-icons">grass</span>Seeds</div>
+    <div class="f-chip" onclick="setInputCat('fertilizer',this)"><span class="material-icons">science</span>Fertilizers</div>
+    <div class="f-chip" onclick="setInputCat('pesticide',this)"><span class="material-icons">pest_control</span>Pesticides</div>
+    <div class="f-chip" onclick="setInputCat('organic',this)"><span class="material-icons">eco</span>Organic</div>
+    <div class="f-chip" onclick="setInputCat('equipment',this)"><span class="material-icons">agriculture</span>Equipment</div>
+  </div>
+
+  <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="inputCount"></div>
+  <div class="kb-grid" id="inputGrid"></div>
+
+  <!-- Nearby Shops -->
+  <div class="sec-head" style="margin-top:8px;"><div class="sec-head-title"><span class="material-icons">store</span>Nearby Agri Shops</div></div>
+  <div id="shopsList"></div>
+</div>
+</main>
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const INPUT_PRODUCTS=[
+  {id:1,name:'Mancozeb 75% WP',       cat:'pesticide', use:'Fungal disease control',          price:320, pack:'500g',  brand:'UPL',         img:0},
+  {id:2,name:'DAP Fertilizer',         cat:'fertilizer',use:'Basal dose — all crops',          price:1350,pack:'50 kg', brand:'IFFCO',        img:1},
+  {id:3,name:'Soybean Hybrid JS-9752', cat:'seed',      use:'Kharif sowing — black soil',      price:550, pack:'30 kg', brand:'MSSC',         img:2},
+  {id:4,name:'Trichoderma viride',     cat:'organic',   use:'Soil biocontrol treatment',       price:180, pack:'1 kg',  brand:'Agri-Biotech', img:3},
+  {id:5,name:'Imidacloprid 70% WG',   cat:'pesticide', use:'Whitefly and sucking pests',      price:480, pack:'100g',  brand:'Bayer',        img:4},
+  {id:6,name:'Neem-coated Urea',       cat:'fertilizer',use:'Top dressing all cereals',        price:260, pack:'45 kg', brand:'NFL',          img:5},
+  {id:7,name:'BT Cotton Seed (Bollgard II)',cat:'seed', use:'Kharif cotton sowing',            price:750, pack:'450g', brand:'Mahyco',       img:0},
+  {id:8,name:'Neem Oil (5000 PPM)',    cat:'organic',   use:'Organic pest repellent',          price:220, pack:'1 litre',brand:'GreenCare',   img:1},
+  {id:9,name:'Chlorpyrifos 20% EC',   cat:'pesticide', use:'Soil insects and stem borer',     price:380, pack:'500ml', brand:'Dhanuka',      img:2},
+  {id:10,name:'Potassium Nitrate',     cat:'fertilizer',use:'Foliar spray for fruit crops',    price:420, pack:'25 kg', brand:'SQM India',   img:3},
+  {id:11,name:'Wheat Seed GW-322',     cat:'seed',      use:'Rabi wheat — high yield',         price:380, pack:'40 kg', brand:'NRSA',         img:4},
+  {id:12,name:'Battery Sprayer (16L)', cat:'equipment', use:'Pesticide and fertiliser spray',  price:3800,pack:'1 unit',brand:'Aspee',        img:5},
+];
+const SHOPS=[{name:'Shivaji Krishi Kendra',addr:'Market Yard, Pune',dist:'0.8 km',rating:4.5,open:true,phone:'9876501234'},{name:'Agro Vision Pvt Ltd',addr:'Station Rd, Pune',dist:'1.4 km',rating:4.2,open:true,phone:'9876502345'},{name:'Maharashtra Seed Corp.',addr:'Agri College Rd, Pune',dist:'3.5 km',rating:4.3,open:false,phone:'9876504567'}];
+
+let inputCat='all';
+window.initPage_buy_inputs=function(){renderInputs(INPUT_PRODUCTS);renderShops();};
+function setInputCat(cat,el){inputCat=cat;document.querySelectorAll('#inputFilterRow .f-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');filterInputs();}
+function filterInputs(){const q=(document.getElementById('inputSearch')?.value||'').toLowerCase();const list=INPUT_PRODUCTS.filter(p=>(inputCat==='all'||p.cat===inputCat)&&(!q||p.name.toLowerCase().includes(q)||p.use.toLowerCase().includes(q)||p.brand.toLowerCase().includes(q)));setTxt('inputCount',list.length+' product'+(list.length!==1?'s':'')+' found');renderInputs(list);}
+
+function renderInputs(list){const el=document.getElementById('inputGrid');if(!el)return;if(!list.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><span class="material-icons">science</span><h4>No products found</h4><p>Try different search</p></div>';return;}el.innerHTML=list.map(p=>`<div class="prod-card"><div style="position:relative;"><img src="${pimg(IMG.products,p.img)}" alt="${p.name}" style="width:100%;height:130px;object-fit:cover;display:block;" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><div style="display:none;width:100%;height:130px;background:var(--primary-light);align-items:center;justify-content:center;"><span class="material-icons" style="font-size:50px;color:#A5D6A7;">science</span></div><div style="position:absolute;top:8px;left:8px;"><span class="badge bdg-gray" style="font-size:9px;">${p.cat.charAt(0).toUpperCase()+p.cat.slice(1)}</span></div></div><div class="prod-card-body"><div class="prod-card-name">${p.name}</div><div class="prod-card-farmer"><span class="material-icons">business</span>${p.brand}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:5px;">${p.use}</div><div class="prod-card-price">Rs.${fmt(p.price)}<small>/${p.pack}</small></div><div class="qty-row"><div class="qty-btn" onclick="changeIQty(${p.id},-1)">−</div><span class="qty-val" id="iq_${p.id}">1</span><span class="qty-unit">${p.pack}</span><div class="qty-btn" onclick="changeIQty(${p.id},1)">+</div></div><button class="btn btn-whatsapp btn-sm btn-full" onclick="buyInputWA('${p.name}','${p.pack}',${p.price},${p.id})"><span class="material-icons">chat</span>Buy via WhatsApp</button></div></div>`).join('');}
+
+function changeIQty(id,d){const el=document.getElementById('iq_'+id);if(el)el.textContent=Math.max(1,parseInt(el.textContent)+d);}
+function buyInputWA(name,pack,price,id){const qty=document.getElementById('iq_'+id)?.textContent||1;const msg=encodeURIComponent(`Hello, I want to buy ${qty} x ${name} (${pack}) at Rs.${price}/${pack} from KisanBazaar AI. Please confirm stock availability and delivery options.`);window.open(`https://wa.me/?text=${msg}`,'_blank');}
+
+function renderShops(){const el=document.getElementById('shopsList');if(!el)return;el.innerHTML=SHOPS.map(s=>`<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;display:flex;gap:13px;box-shadow:var(--shadow-xs);margin-bottom:10px;transition:all .18s;cursor:pointer;" onmouseover="this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.boxShadow='var(--shadow-xs)'"><div style="width:46px;height:46px;background:var(--primary-light);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span class="material-icons" style="font-size:24px;color:var(--primary);">store</span></div><div style="flex:1;"><div style="font-family:'Poppins',sans-serif;font-size:13.5px;font-weight:700;margin-bottom:2px;">${s.name}</div><div style="font-size:11.5px;color:var(--text-muted);margin-bottom:6px;">${s.addr}</div><div style="display:flex;align-items:center;gap:10px;"><span style="font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;gap:3px;"><span class="material-icons" style="font-size:13px;color:var(--primary);">near_me</span>${s.dist}</span><span style="font-size:11.5px;color:#E65100;font-weight:600;">&#9733; ${s.rating}</span><span class="badge ${s.open?'bdg-green':'bdg-red'}" style="font-size:9.5px;">${s.open?'Open Now':'Closed'}</span></div></div><div style="display:flex;flex-direction:column;gap:6px;"><a href="tel:${s.phone}" class="btn btn-ghost btn-xs"><span class="material-icons">call</span>Call</a><button class="btn btn-whatsapp btn-xs" onclick="shopWA('${s.name}')"><span class="material-icons">chat</span>Chat</button></div></div>`).join('');}
+function shopWA(name){const msg=encodeURIComponent(`Hello, I found ${name} on KisanBazaar AI. I need some agricultural inputs. Please share your available products and prices.`);window.open(`https://wa.me/?text=${msg}`,'_blank');}
+</script>
+</body>
+</html>

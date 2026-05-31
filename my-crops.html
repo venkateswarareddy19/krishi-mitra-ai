@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Crops — KisanBazaar AI</title>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body data-page="my-crops">
+<div id="kb-header-ph"></div>
+<main class="kb-page">
+<div class="kb-container">
+  <div class="kb-pgbar"><span class="material-icons">grass</span><h2>My Crops Status</h2><div class="kb-pgbar-right"><button class="btn btn-accent btn-sm" onclick="openModal('addCropModal')"><span class="material-icons">add</span>Add Crop</button></div></div>
+
+  <!-- Season Stats -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+    <div class="stat-card"><div class="stat-lbl">Active Crops</div><div class="stat-val" id="cropCount">3</div></div>
+    <div class="stat-card"><div class="stat-lbl">Total Area</div><div class="stat-val" id="totalArea">4.5 Ac</div></div>
+    <div class="stat-card"><div class="stat-lbl">Avg Health</div><div class="stat-val" id="avgHealth" style="color:var(--primary);">79%</div></div>
+  </div>
+
+  <!-- Farm Alerts -->
+  <div class="info-box ib-yellow"><span class="material-icons">warning</span><p><strong>Cotton:</strong> Monitor for bollworm egg masses this week. Scout 20 plants/acre every 3 days. Install pheromone traps if not already done.</p></div>
+  <div class="info-box ib-blue"><span class="material-icons">water_drop</span><p><strong>Onion:</strong> Bulb formation started — increase irrigation to maintain 60-70% soil moisture consistently.</p></div>
+
+  <div id="cropsList"></div>
+</div>
+</main>
+
+<div class="modal-overlay" id="addCropModal" onclick="closeModalOnOverlay(event,'addCropModal')">
+  <div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-head"><div class="modal-title">Add New Crop</div><button class="modal-close" onclick="closeModal('addCropModal')"><span class="material-icons">close</span></button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Crop Name <span class="form-req">*</span></label><input class="form-input" id="acName" placeholder="e.g. Soybean, Cotton, Tomato"/></div>
+      <div class="form-2col">
+        <div class="form-group"><label class="form-label">Area (Acres)</label><input class="form-input" id="acArea" type="number" placeholder="2.0" min="0.1" step="0.1"/></div>
+        <div class="form-group"><label class="form-label">Sowing Date</label><input class="form-input" id="acDate" type="date"/></div>
+      </div>
+      <div class="form-2col">
+        <div class="form-group"><label class="form-label">Growth Stage</label><select class="form-select" id="acStage"><option>Germination</option><option>Vegetative</option><option>Flowering</option><option>Fruiting</option><option>Maturity</option></select></div>
+        <div class="form-group"><label class="form-label">Soil Type</label><select class="form-select" id="acSoil"><option>Black Cotton</option><option>Red Soil</option><option>Alluvial</option><option>Sandy Loam</option><option>Clay</option></select></div>
+      </div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="addCrop()"><span class="material-icons">check_circle</span>Add Crop to My Farm</button>
+    </div>
+  </div>
+</div>
+
+<div id="kb-bottom-nav-ph"></div>
+<div id="kb-footer-ph"></div>
+<script src="script.js"></script>
+<script>
+const DEFAULT_CROPS=[{id:1,name:'Soybean',area:2.0,sown:'15 Jun 2025',harvest:'Oct 2025',stage:'Flowering',soil:'Black Cotton',health:82,moisture:68,nutrient:74,sug:'Apply 30 kg Urea/acre now for better pod filling. Reduce irrigation frequency — crop is at critical flowering stage.'},{id:2,name:'Cotton',area:1.5,sown:'10 Jun 2025',harvest:'Dec 2025',stage:'Vegetative',soil:'Black Cotton',health:90,moisture:72,nutrient:80,sug:'Monitor for bollworm egg masses. Scout field every 3 days. Install pheromone traps at 5 per acre if not done.'},{id:3,name:'Onion',area:1.0,sown:'1 Jul 2025',harvest:'Feb 2026',stage:'Germination',soil:'Red Loam',health:65,moisture:55,nutrient:60,sug:'Increase irrigation to maintain 60-70% moisture. Bulb formation has started. Watch for Purple Blotch symptoms.'}];
+let crops=JSON.parse(localStorage.getItem('kb_crops_v4')||'null')||DEFAULT_CROPS;
+window.initPage_my_crops=function(){renderCrops();updateStats();document.getElementById('acDate').valueAsDate=new Date();};
+function renderCrops(){const el=document.getElementById('cropsList');if(!el)return;if(!crops.length){el.innerHTML='<div class="empty-state"><span class="material-icons">grass</span><h4>No crops added yet</h4><p>Tap Add Crop to start tracking your fields</p></div>';return;}el.innerHTML=crops.map(c=>`<div class="crop-card-wrap"><div class="crop-top"><div class="crop-icon" style="background:${c.health>80?'#E8F5E9':c.health>60?'#FFF8E1':'#FFEBEE'};"><span class="material-icons" style="color:${c.health>80?'#2E7D32':c.health>60?'#F57F17':'#C62828'};">grass</span></div><div style="flex:1;"><div class="crop-name">${c.name}</div><div class="crop-meta">${c.area} Acre &middot; Sown: ${c.sown} &middot; Harvest: ${c.harvest}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;"><span class="badge ${c.health>80?'bdg-green':c.health>60?'bdg-yellow':'bdg-red'}">${c.stage}</span><div style="display:flex;gap:4px;"><button class="btn btn-ghost btn-xs" onclick="editCrop(${c.id})"><span class="material-icons">edit</span></button><button class="btn btn-danger btn-xs" onclick="removeCrop(${c.id})"><span class="material-icons">delete</span></button></div></div></div><div class="cp-wrap"><div class="cp-row"><div class="cp-lbl">Health</div><div class="cp-bar"><div class="cp-fill ${c.health>80?'cp-good':c.health>60?'cp-warn':'cp-bad'}" style="width:${c.health}%;"></div></div><div class="cp-pct" style="color:${c.health>80?'#2E7D32':c.health>60?'#F57F17':'#C62828'};">${c.health}%</div></div><div class="cp-row"><div class="cp-lbl">Moisture</div><div class="cp-bar"><div class="cp-fill ${c.moisture>65?'cp-good':c.moisture>45?'cp-warn':'cp-bad'}" style="width:${c.moisture}%;"></div></div><div class="cp-pct">${c.moisture}%</div></div><div class="cp-row"><div class="cp-lbl">Nutrients</div><div class="cp-bar"><div class="cp-fill ${c.nutrient>70?'cp-good':c.nutrient>50?'cp-warn':'cp-bad'}" style="width:${c.nutrient}%;"></div></div><div class="cp-pct">${c.nutrient}%</div></div></div><div class="crop-tip"><span class="material-icons">tips_and_updates</span><p>${c.sug}</p></div><div style="padding:0 15px 13px;display:flex;gap:8px;"><a href="scan.html" class="btn btn-outline btn-sm"><span class="material-icons">document_scanner</span>Scan</a><a href="advisory.html" class="btn btn-ghost btn-sm"><span class="material-icons">psychology</span>AI Advice</a><a href="check-price.html" class="btn btn-ghost btn-sm"><span class="material-icons">trending_up</span>Price</a></div></div>`).join('');}
+function updateStats(){setTxt('cropCount',crops.length);const a=crops.reduce((s,c)=>s+c.area,0).toFixed(1);setTxt('totalArea',a+' Ac');const h=crops.length?Math.round(crops.reduce((s,c)=>s+c.health,0)/crops.length):0;setTxt('avgHealth',h+'%');}
+function addCrop(){const name=document.getElementById('acName').value.trim();const area=document.getElementById('acArea').value;const date=document.getElementById('acDate').value;const stage=document.getElementById('acStage').value;const soil=document.getElementById('acSoil').value;if(!name){toast('Enter crop name','error');return;}const c={id:Date.now(),name,area:parseFloat(area)||1,sown:date||'Recently',harvest:'TBD',stage,soil,health:85,moisture:65,nutrient:72,sug:`Monitor ${name} closely. Follow recommended fertiliser and irrigation schedule for optimal yield.`};crops.push(c);localStorage.setItem('kb_crops_v4',JSON.stringify(crops));closeModal('addCropModal');document.getElementById('acName').value='';renderCrops();updateStats();toast(name+' added to My Farm!','success');}
+function removeCrop(id){crops=crops.filter(c=>c.id!==id);localStorage.setItem('kb_crops_v4',JSON.stringify(crops));renderCrops();updateStats();toast('Crop removed','info');}
+function editCrop(id){toast('Edit crop feature coming soon','info');}
+</script>
+</body>
+</html>
